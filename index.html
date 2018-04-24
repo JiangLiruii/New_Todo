@@ -26,7 +26,7 @@
     <main>
       <input type="text" id="todoInput" placeholder="请输入你接下来要做的事情">
       <button id="addButton">+</button>
-      <select name="complete" id="complete">
+      <select name="completeSelect" id="completeSelect">
         <option value="completed" selected>completed</option>
         <option value="unCompleted">unCompleted</option>
       </select>
@@ -63,12 +63,15 @@
         </tbody>
       </table>
     </main>
-    <footer></footer>
+    <footer>
+      <h3 id="syncDom"></h3>
+    </footer>
   </div>
   <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-  <script src="todoView.js"></script>
-  <script src="todoControl.js"></script>
+  <script src='./node_modules/pouchdb/dist/pouchdb.min.js'></script>
+  <script src="js/todoView.js"></script>
+  <script src="js/todoControl.js"></script>
 </body>
 
 </html>
