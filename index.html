@@ -24,8 +24,12 @@
       <h1>Lorry Todo List</h1>
     </header>
     <main>
-      <input type="text" placeholder="请输入你接下来要做的事情">
-      <button>+</button>
+      <input type="text" id="todoInput" placeholder="请输入你接下来要做的事情">
+      <button id="addButton">+</button>
+      <select name="complete" id="complete">
+        <option value="completed" selected>completed</option>
+        <option value="unCompleted">unCompleted</option>
+      </select>
       <table>
         <thead>
           <tr>
@@ -36,15 +40,35 @@
           </tr>
         </thead>
         <tbody id="listcontent">
-          <tr></tr>
           <tr>
-            <td></td>
+            <td>
+              <button>yes</button>
+            </td>
+            <td>做作业</td>
+            <td>2018-01-01</td>
+            <td>
+              <button>delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button>yes</button>
+            </td>
+            <td>做作业</td>
+            <td>2018-01-01</td>
+            <td>
+              <button>delete</button>
+            </td>
           </tr>
         </tbody>
       </table>
     </main>
     <footer></footer>
   </div>
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="todoView.js"></script>
+  <script src="todoControl.js"></script>
 </body>
 
 </html>

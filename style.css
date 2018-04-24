@@ -14,7 +14,7 @@ body {
   text-align: center;
 }
 
-main button {
+main>button {
   width: 2em;
   height: 2em;
 }
@@ -22,16 +22,35 @@ main button {
 input {
   width: 50%;
   height: 2em;
+  border-radius: 5em;
+  padding-left: 1em;
+  box-shadow: 0em 1em 1em #888888;
+}
+
+#complete {
+  display: block;
+  border-radius: 3em;
+  width: 10em;
+  margin: 1em auto;
 }
 
 table {
   margin: 1em auto;
+  padding: 1em;
   font-size: 70%;
   table-layout: fixed;
+  background-color: rgba(207, 206, 206, 0.562);
+  box-shadow: 0em 1em 1em #888888;
 }
 
-thead,
+td {
+  border-bottom: 1px solid rgb(73, 73, 73);
+}
+
+th,
 tfoot {
-  color: darkgray;
+  margin: 1em;
+  color: rgb(102, 102, 102);
   font-size: 1.5em;
+  border-bottom: 1px solid rgb(73, 73, 73);
 }
