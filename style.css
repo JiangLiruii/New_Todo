@@ -47,6 +47,11 @@ td {
   border-bottom: 1px solid rgb(73, 73, 73);
 }
 
+#completeSelect {
+  display: block;
+  margin: 1em auto;
+}
+
 th,
 tfoot {
   margin: 1em;
