@@ -10,6 +10,7 @@
   $(document).on('itemUpdate', itemUpdate);
   $(document).on('click', '#addButton', onAdd);
   $(document).on('click', '.delete', onDelete);
+  $(document).on('change', '.complete', onComplete);
 
   function onAdd() {
     if (todoInput.val().trim() === '') {
@@ -21,10 +22,23 @@
 
   function onDelete(e) {
     // todo 确认弹窗
+    const tr = $(e.target).parents('tr');
     $(document).trigger('itemDelete', {
       row: {
-        id: $(e.target).attr('id'),
-        rev: $(e.target).attr('rev'),
+        id: tr.attr('_id'),
+        rev: tr.attr('_rev'),
+      },
+    });
+  }
+
+  function onComplete(e) {
+    const tr = $(e.target).parents('tr');
+    const statue = $(e.target).attr('checked');
+    $(document).trigger('itemCompleteChange', {
+      doc: {
+        statue,
+        _rev: tr.attr('_rev'),
+        _id: tr.attr('_id'),
       },
     });
   }
@@ -61,7 +75,7 @@
             date,
           },
         } = row;
-        const todolist = `<tr>
+        const todolist = `<tr _id=${row.id} _rev=${row.doc._rev}>
         <td>
           <input type='checkbox' class="complete" ${complete ? 'checked' : ''} >
         </td>
@@ -72,7 +86,7 @@
           ${date}
         </td>
         <td>
-          <button class='delete' id=${row.id} rev=${row.doc._rev}>x</button>
+          <button class='delete'>x</button>
         </td>
       </tr>`;
         todoLists += todolist;
