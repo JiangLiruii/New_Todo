@@ -2,6 +2,7 @@
     "extends": "airbnb-base",
     "rules": {
         "no-undef": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "no-use-before-define": "off"
     }
 }
