@@ -14,6 +14,10 @@ body {
   text-align: center;
 }
 
+main {
+  position: relative;
+}
+
 main>button {
   width: 2em;
   height: 2em;
@@ -25,6 +29,11 @@ input {
   border-radius: 5em;
   padding-left: 1em;
   box-shadow: 0em 1em 1em #888888;
+}
+
+#prompt {
+  position: absolute;
+  top: -1.5em;
 }
 
 #complete {
