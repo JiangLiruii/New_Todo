@@ -3,6 +3,7 @@
 
   $(document).on('firstSyncComplete', sync);
   $(document).on('itemDelete', onDbDelete);
+  $(document).on('itemCompleteChange', onCompleteChange);
 
   function sync() {
     db.allDocs({
@@ -42,6 +43,22 @@
       .then(() => {
         sync();
       });
+  }
+
+  function onCompleteChange(e, {
+    doc: {
+      statue,
+      _rev,
+      _id,
+    },
+  }) {
+    db.put({
+      _id,
+      _rev,
+      complete: !statue,
+    }).then(() => {
+      sync();
+    });
   }
 
   $(document).ready(() => {
