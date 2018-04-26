@@ -25,7 +25,7 @@
     data.complete = false;
     data._id = addDate.toISOString();
     data.title = todo;
-    data.date = addDate.toDateString();
+    data.date = `${addDate.getFullYear()}-${addDate.getMonth()}-${addDate.getDate()}`;
     db.put(data, (err, res) => {
       if (!err) {
         sync();
@@ -50,11 +50,15 @@
       statue,
       _rev,
       _id,
+      date,
+      title,
     },
   }) {
     db.put({
       _id,
       _rev,
+      date,
+      title,
       complete: !statue,
     }).then(() => {
       sync();
@@ -64,6 +68,5 @@
   $(document).ready(() => {
     $(document).trigger('startSync');
     $(document).on('itemAdd', itemAdd);
-    $('#completeSelect').on('change', sync);
   });
 }(jQuery));
