@@ -3,6 +3,7 @@
   const prompt = $('#prompt');
   const todoInput = $('#todoInput');
   const content = $('#listcontent');
+  // 用于计数
   let time;
 
   $(document).on('emptyInput', onEmpty);
@@ -10,7 +11,8 @@
   $(document).on('itemUpdate', itemUpdate);
   $(document).on('click', '#addButton', onAdd);
   $(document).on('click', '.delete', onDelete);
-  $(document).on('change', '.complete', onComplete);
+  $(document).on('click', '.complete', onComplete);
+  $(document).on('change', '#completeSelect', onSelectChange);
 
   function onAdd() {
     if (todoInput.val().trim() === '') {
@@ -39,7 +41,31 @@
         statue,
         _rev: tr.attr('_rev'),
         _id: tr.attr('_id'),
+        date: tr.attr('_date'),
+        title: tr.attr('_title'),
       },
+    });
+  }
+
+  function onSelectChange(e) {
+    e.stopPropagation();
+    const select = e.target.value;
+    const completeTd = content.find('.complete');
+    completeTd.each((index, item) => {
+      todo = $(item).parents('tr');
+      if (select === 'completed') {
+        todo.hide();
+        if ($(item).attr('checked') === 'checked') {
+          todo.show();
+        }
+      } else if (select === 'unCompleted') {
+        todo.show();
+        if ($(item).attr('checked') === 'checked') {
+          todo.hide();
+        }
+      } else {
+        todo.show();
+      }
     });
   }
 
@@ -75,7 +101,7 @@
             date,
           },
         } = row;
-        const todolist = `<tr _id=${row.id} _rev=${row.doc._rev}>
+        const todolist = `<tr _title=${title} _date=${date} _id=${row.id} _rev=${row.doc._rev}>
         <td>
           <input type='checkbox' class="complete" ${complete ? 'checked' : ''} >
         </td>
