@@ -28,8 +28,9 @@
       <button id="addButton">+</button>
       <span id="prompt"></span>
       <select name="completeSelect" id="completeSelect">
-        <option value="completed" selected>completed</option>
-        <option value="unCompleted">unCompleted</option>
+        <option value="all" selected>All</option>
+        <option value="completed">Completed</option>
+        <option value="unCompleted">Uncompleted</option>
       </select>
       <table>
         <thead>
@@ -48,8 +49,7 @@
       <h3 id="syncDom"></h3>
     </footer>
   </div>
-  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script src='./node_modules/pouchdb/dist/pouchdb.min.js'></script>
   <script src="js/todoView.js"></script>
   <script src="js/todoControl.js"></script>
