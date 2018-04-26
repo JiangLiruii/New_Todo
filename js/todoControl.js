@@ -1,7 +1,7 @@
 (function start($) {
   const db = new PouchDB('todos');
 
-  $(document).on('firstSyncComplete', sync);
+  $(document).on('onSyncRecieve', sync);
   $(document).on('itemDelete', onDbDelete);
   $(document).on('itemCompleteChange', onCompleteChange);
 

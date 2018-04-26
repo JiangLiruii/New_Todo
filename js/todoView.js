@@ -82,13 +82,14 @@
 
 
   function onStartSync() {
-    syncDom.val('syncing');
-    $(document).trigger('firstSyncComplete');
+    syncDom.text('SYNCING');
+    $(document).trigger('onSyncRecieve');
   }
 
   function itemUpdate(e, {
     rows,
   }) {
+    syncDom.text('SYNCED');
     content.children().remove();
     let todoLists = '';
     todoInput.val('');
