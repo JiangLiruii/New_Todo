@@ -2,6 +2,15 @@
 
 - Restart Todo Project
 
+## version 1.0.1
+
+### 新增功能
+
+- 状态的筛选
+  - 已完成
+  - 未完成
+  - 全部
+
 ## version 1.0.0
 
 ### 基本功能
