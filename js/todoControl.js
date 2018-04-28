@@ -6,25 +6,25 @@ const db = new PouchDB('todos');
 //   itemCompleteChange: onCompleteChange,
 //   itemAdd,
 // });
-new Event();
+let onSyncRecieve = new Event('onSyncRecieve', { bubbles: false, cancelable: false });
+
 document.addEventListener('onSyncRecieve', sync);
 document.addEventListener('itemDelete', onDbDelete);
 document.addEventListener('itemCompleteChange', onCompleteChange);
-document.addEventListener('itemAdd', itemAdd);
+document.addEventListener('itemAdd', onitemAdd);
 
 function sync() {
   db.allDocs({
     include_docs: true,
     descending: true,
   }, (err, doc) => {
-    document.dispatchEvent('itemUpdate', {
-      rows: doc.rows,
-    });
+    let itemUpdate = new CustomEvent('itemUpdate', { 'detail': doc.rows });
+    document.dispatchEvent(itemUpdate);
   });
 }
 
-function itemAdd() {
-  const todo = $('#todoInput').val().trim();
+function onitemAdd() {
+  const todo = document.getElementById('todoInput').value;
   const addDate = new Date();
   const data = {
     _id: '',
@@ -46,24 +46,23 @@ function itemAdd() {
   });
 }
 
-function onDbDelete(e, {
-  row,
-}) {
+function onDbDelete(e) {
+  let row = e.detail;
   db.remove(row.id, row.rev)
     .then(() => {
       sync();
     });
 }
 
-function onCompleteChange(e, {
-  doc: {
-    statue,
-    _rev,
+function onCompleteChange(e) {
+  console.log(e.detail);
+  let {
     _id,
+    _rev,
     date,
     title,
-  },
-}) {
+    statue,
+  } = e.detail;
   db.put({
     _id,
     _rev,
@@ -75,6 +74,6 @@ function onCompleteChange(e, {
   });
 }
 
-document.onload = () => {
-  document.dispatchEvent('startSync');
-};
+document.onload = (() => {
+  document.dispatchEvent(startSync);
+})();

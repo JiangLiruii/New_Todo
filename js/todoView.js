@@ -2,8 +2,11 @@ const syncDom = document.getElementById('syncDom');
 const prompt = document.getElementById('prompt');
 const todoInput = document.getElementById('todoInput');
 const content = document.getElementById('listcontent');
+const completeChange = document.getElementById('completeSelect')
 // 用于计数
 let time;
+let itemAdd = new CustomEvent('itemAdd');
+
 
 // document.addEventListener({
 //   emptyInput: onEmpty,
@@ -11,9 +14,12 @@ let time;
 //   itemUpdate,
 //   click: onClickFunc,
 // });
+let emptyInput = new Event('emptyInput', { bubbles: false, cancelable: false });
+let startSync = new Event('startSync', { bubbles: false, cancelable: false });
 document.addEventListener('emptyInput', onEmpty);
 document.addEventListener('startSync', onStartSync);
-document.addEventListener('itemUpdate', itemUpdate);
+document.addEventListener('itemUpdate', onitemUpdate);
+completeChange.addEventListener('change', onSelectChange)
 document.addEventListener('click', onClickFunc);
 
 function onClickFunc(e) {
@@ -23,8 +29,6 @@ function onClickFunc(e) {
     onComplete(e.target);
   } else if (e.target.id === 'addButton') {
     onAdd();
-  } else if (e.target.id === 'completeSelect') {
-    onSelectChange(e.target);
   }
 }
 
@@ -32,55 +36,57 @@ function onAdd() {
   if (todoInput.value.trim() === '') {
     onEmpty();
   } else {
-    document.dispatchEvent('itemAdd', todoInput.value);
+    document.dispatchEvent(itemAdd);
   }
 }
 
 function onDelete(ele) {
   // todo 确认弹窗
-  const tr = $(ele).parentNode.parentNode;
-
-  document.dispatchEvent('itemDelete', {
-    row: {
-      id: tr.attr('_id'),
-      rev: tr.attr('_rev'),
-    },
+  const tr = ele.parentNode.parentNode;
+  let itemDelete = new CustomEvent('itemDelete', {
+    detail: {
+      id: tr.getAttribute('_id'),
+      rev: tr.getAttribute('_rev'),
+    }
   });
+
+  document.dispatchEvent(itemDelete);
 }
 
 function onComplete(ele) {
-  const tr = $(ele).parentNode.parentNode;
-  const statue = $(ele).attr('checked');
-
-  document.dispatchEvent('itemCompleteChange', {
-    doc: {
+  const tr = ele.parentNode.parentNode;
+  const statue = ele.getAttribute('checked');
+  let itemCompleteChange = new CustomEvent('itemCompleteChange', {
+    detail: {
       statue,
-      _rev: tr.attr('_rev'),
-      _id: tr.attr('_id'),
-      date: tr.attr('_date'),
-      title: tr.attr('_title'),
-    },
+      _rev: tr.getAttribute('_rev'),
+      _id: tr.getAttribute('_id'),
+      date: tr.getAttribute('_date'),
+      title: tr.getAttribute('_title'),
+    }
   });
+
+  document.dispatchEvent(itemCompleteChange);
 }
 
-function onSelectChange(ele) {
-  const select = ele.value;
+function onSelectChange(e) {
+  const select = e.target.value;
   const completeTd = content.getElementsByClassName('complete');
 
-  completeTd.forEach((item) => {
-    todo = $(item).parents('tr');
+  Array.from(completeTd).forEach((item) => {
+    todo = item.parentNode.parentNode;
     if (select === 'completed') {
-      todo.hide();
-      if ($(item).attr('checked') === 'checked') {
-        todo.show();
+      todo.style.display = 'none';
+      if (item.hasAttribute('checked')) {
+        todo.style.display = '';
       }
     } else if (select === 'unCompleted') {
-      todo.show();
-      if ($(item).attr('checked') === 'checked') {
-        todo.hide();
+      todo.style.display = '';
+      if (item.hasAttribute('checked')) {
+        todo.style.display = 'none';
       }
     } else {
-      todo.show();
+      todo.style.display = '';
     }
   });
 }
@@ -99,19 +105,17 @@ function onEmpty() {
 
 
 function onStartSync() {
-  syncDom.text('SYNCING');
-  document.dispatchEvent('onSyncRecieve');
+  syncDom.innerText = 'SYNCING';
+  document.dispatchEvent(onSyncRecieve);
 }
 
-function itemUpdate(e, {
-  rows,
-}) {
+function onitemUpdate(e) {
+  let rows = e.detail;
   let todoLists = '';
+  syncDom.innerText = 'SYNCED';
+  content.innerHTML = '';
 
-  syncDom.text('SYNCED');
-  content.children().remove();
-
-  todoInput.val('');
+  todoInput.value = '';
   if (rows.length > 0) {
     rows.forEach((row) => {
       const {
@@ -138,5 +142,5 @@ function itemUpdate(e, {
       todoLists += todolist;
     });
   }
-  content.append($(todoLists));
+  content.innerHTML = todoLists;
 }
