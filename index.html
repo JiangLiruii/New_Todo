@@ -7,52 +7,55 @@
 <!--<![endif]-->
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Lorry Todo</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Lorry Todo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <!--[if lt IE 7]>
+    <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-  <div id="all">
-    <header>
-      <h1>Lorry Todo List</h1>
-    </header>
-    <main>
-      <input type="text" id="todoInput" placeholder="请输入你接下来要做的事情">
-      <button id="addButton">+</button>
-      <span id="prompt"></span>
-      <select name="completeSelect" id="completeSelect">
+    <div id="all">
+        <header>
+            <h1>Lorry Todo List</h1>
+        </header>
+        <main>
+            <input type="text" id="todoInput" placeholder="请输入你接下来要做的事情">
+            <button id="addButton">+</button>
+            <span id="prompt"></span>
+            <select name="completeSelect" id="completeSelect">
         <option value="all" selected>All</option>
         <option value="completed">Completed</option>
         <option value="unCompleted">Uncompleted</option>
       </select>
-      <table>
-        <thead>
-          <tr>
-            <th>确认完成</th>
-            <th width="50%">待办描述</th>
-            <th>添加时间</th>
-            <th>删除待办</th>
-          </tr>
-        </thead>
-        <tbody id="listcontent">
-        </tbody>
-      </table>
-    </main>
-    <footer>
-      <h3 id="syncDom"></h3>
-    </footer>
-  </div>
-  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-  <script src='./node_modules/pouchdb/dist/pouchdb.min.js'></script>
-  <script src="js/todoView.js"></script>
-  <script src="js/todoControl.js"></script>
+            <table>
+                <thead>
+                    <tr>
+                        <th>确认完成</th>
+                        <th width="50%">待办描述</th>
+                        <th>添加时间</th>
+                        <th>删除待办</th>
+                    </tr>
+                </thead>
+                <tbody id="listcontent">
+                </tbody>
+            </table>
+            <div class="container">
+
+            </div>
+        </main>
+        <footer>
+            <h3 id="syncDom"></h3>
+        </footer>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src='./node_modules/pouchdb/dist/pouchdb.min.js'></script>
+    <script src="js/todoView.js"></script>
+    <script src="js/todoControl.js"></script>
 </body>
 
 </html>

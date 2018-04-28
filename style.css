@@ -1,7 +1,6 @@
 body {
     display: flex;
     align-items: center;
-    vertical-align: middle;
     min-height: 50rem;
 }
 
@@ -9,7 +8,7 @@ body {
     position: relative;
     background-image: url('todoImg.jpeg');
     background-size: 100%;
-    margin: 0 auto;
+    margin: auto;
     width: 50%;
     min-width: 20rem;
     border: 1px solid #cccccc;
@@ -50,6 +49,14 @@ table {
     padding: 1em;
     background-color: rgba(207, 206, 206, 0.562);
     box-shadow: 0em 1em 1em #888888;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-flow: row wrap;
 }
 
 th,
