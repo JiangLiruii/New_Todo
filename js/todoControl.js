@@ -21,10 +21,13 @@
 
   function itemAdd() {
     const todo = $('#todoInput').val().trim();
+    const addDate = new Date();
     const data = {
       _id: '',
+      title: '',
+      date: '',
     };
-    const addDate = new Date();
+
     data.complete = false;
     data._id = addDate.toISOString();
     data.title = todo;

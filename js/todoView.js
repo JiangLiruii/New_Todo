@@ -36,6 +36,7 @@
   function onDelete(ele) {
     // todo 确认弹窗
     const tr = $(ele).parents('tr');
+
     $(document).trigger('itemDelete', {
       row: {
         id: tr.attr('_id'),
@@ -47,6 +48,7 @@
   function onComplete(ele) {
     const tr = $(ele).parents('tr');
     const statue = $(ele).attr('checked');
+
     $(document).trigger('itemCompleteChange', {
       doc: {
         statue,
@@ -61,6 +63,7 @@
   function onSelectChange(ele) {
     const select = ele.value;
     const completeTd = content.find('.complete');
+
     completeTd.each((index, item) => {
       todo = $(item).parents('tr');
       if (select === 'completed') {
@@ -99,9 +102,11 @@
   function itemUpdate(e, {
     rows,
   }) {
+    let todoLists = '';
+
     syncDom.text('SYNCED');
     content.children().remove();
-    let todoLists = '';
+
     todoInput.val('');
     if (rows.length > 0) {
       rows.forEach((row) => {
