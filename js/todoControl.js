@@ -1,9 +1,12 @@
 (function start($) {
   const db = new PouchDB('todos');
 
-  $(document).on('onSyncRecieve', sync);
-  $(document).on('itemDelete', onDbDelete);
-  $(document).on('itemCompleteChange', onCompleteChange);
+  $(document).bind({
+    onSyncRecieve: sync,
+    itemDelete: onDbDelete,
+    itemCompleteChange: onCompleteChange,
+    itemAdd,
+  });
 
   function sync() {
     db.allDocs({
@@ -67,6 +70,5 @@
 
   $(document).ready(() => {
     $(document).trigger('startSync');
-    $(document).on('itemAdd', itemAdd);
   });
 }(jQuery));

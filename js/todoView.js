@@ -6,13 +6,24 @@
   // 用于计数
   let time;
 
-  $(document).on('emptyInput', onEmpty);
-  $(document).on('startSync', onStartSync);
-  $(document).on('itemUpdate', itemUpdate);
-  $(document).on('click', '#addButton', onAdd);
-  $(document).on('click', '.delete', onDelete);
-  $(document).on('click', '.complete', onComplete);
-  $(document).on('change', '#completeSelect', onSelectChange);
+  $(document).bind({
+    emptyInput: onEmpty,
+    startSync: onStartSync,
+    itemUpdate,
+    click: onClickFunc,
+  });
+
+  function onClickFunc(e) {
+    if (e.target.className === 'delete') {
+      onDelete(e.target);
+    } else if (e.target.className === 'complete') {
+      onComplete(e.target);
+    } else if (e.target.id === 'addButton') {
+      onAdd();
+    } else if (e.target.id === 'completeSelect') {
+      onSelectChange(e.target);
+    }
+  }
 
   function onAdd() {
     if (todoInput.val().trim() === '') {
@@ -22,9 +33,9 @@
     }
   }
 
-  function onDelete(e) {
+  function onDelete(ele) {
     // todo 确认弹窗
-    const tr = $(e.target).parents('tr');
+    const tr = $(ele).parents('tr');
     $(document).trigger('itemDelete', {
       row: {
         id: tr.attr('_id'),
@@ -33,9 +44,9 @@
     });
   }
 
-  function onComplete(e) {
-    const tr = $(e.target).parents('tr');
-    const statue = $(e.target).attr('checked');
+  function onComplete(ele) {
+    const tr = $(ele).parents('tr');
+    const statue = $(ele).attr('checked');
     $(document).trigger('itemCompleteChange', {
       doc: {
         statue,
@@ -47,9 +58,8 @@
     });
   }
 
-  function onSelectChange(e) {
-    e.stopPropagation();
-    const select = e.target.value;
+  function onSelectChange(ele) {
+    const select = ele.value;
     const completeTd = content.find('.complete');
     completeTd.each((index, item) => {
       todo = $(item).parents('tr');
