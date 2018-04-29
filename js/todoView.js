@@ -1,31 +1,30 @@
 const syncDom = document.getElementById('syncDom');
 const prompt = document.getElementById('prompt');
 const todoInput = document.getElementById('todoInput');
-const content = document.getElementById('listcontent');
+const content = document.getElementById('content');
 const completeChange = document.getElementById('completeSelect')
 // 用于计数
 let time;
-let itemAdd = new CustomEvent('itemAdd');
 
+const itemAdd = new CustomEvent('itemAdd');
+const itemDelete = new CustomEvent('itemDelete', { detail: {} })
+const onSyncRecieve = new CustomEvent('onSyncRecieve');
+const emptyInput = new CustomEvent('emptyInput');
+const startSync = new CustomEvent('startSync');
+const itemCompleteChange = new CustomEvent('itemCompleteChange', {
+  detail: {},
+});
 
-// document.addEventListener({
-//   emptyInput: onEmpty,
-//   startSync: onStartSync,
-//   itemUpdate,
-//   click: onClickFunc,
-// });
-let emptyInput = new Event('emptyInput', { bubbles: false, cancelable: false });
-let startSync = new Event('startSync', { bubbles: false, cancelable: false });
 document.addEventListener('emptyInput', onEmpty);
 document.addEventListener('startSync', onStartSync);
 document.addEventListener('itemUpdate', onitemUpdate);
 completeChange.addEventListener('change', onSelectChange)
-document.addEventListener('click', onClickFunc);
+document.addEventListener('click', onClickFunc, true);
 
 function onClickFunc(e) {
-  if (e.target.className === 'delete') {
+  if (e.target.parentNode.className === 'itemDelete') {
     onDelete(e.target);
-  } else if (e.target.className === 'complete') {
+  } else if (e.target.parentNode.className === 'itemComplete') {
     onComplete(e.target);
   } else if (e.target.id === 'addButton') {
     onAdd();
@@ -43,46 +42,37 @@ function onAdd() {
 function onDelete(ele) {
   // todo 确认弹窗
   const tr = ele.parentNode.parentNode;
-  let itemDelete = new CustomEvent('itemDelete', {
-    detail: {
-      id: tr.getAttribute('_id'),
-      rev: tr.getAttribute('_rev'),
-    }
-  });
-
+  itemDelete.detail.id = tr.getAttribute('_id');
+  itemDelete.detail.rev = tr.getAttribute('_rev');
   document.dispatchEvent(itemDelete);
 }
 
 function onComplete(ele) {
   const tr = ele.parentNode.parentNode;
-  const statue = ele.getAttribute('checked');
-  let itemCompleteChange = new CustomEvent('itemCompleteChange', {
-    detail: {
-      statue,
-      _rev: tr.getAttribute('_rev'),
-      _id: tr.getAttribute('_id'),
-      date: tr.getAttribute('_date'),
-      title: tr.getAttribute('_title'),
-    }
-  });
-
+  const statue = ele.hasAttribute('checked');
+  itemCompleteChange.detail.statue = statue;
+  itemCompleteChange.detail._rev = tr.getAttribute('_rev');
+  itemCompleteChange.detail._id = tr.getAttribute('_id');
+  itemCompleteChange.detail.date = tr.getAttribute('_date');
+  itemCompleteChange.detail.title = tr.getAttribute('_title');
   document.dispatchEvent(itemCompleteChange);
 }
 
 function onSelectChange(e) {
   const select = e.target.value;
-  const completeTd = content.getElementsByClassName('complete');
+  const completeTd = content.getElementsByClassName('itemComplete');
 
+  e.stopPropagation()
   Array.from(completeTd).forEach((item) => {
-    todo = item.parentNode.parentNode;
+    todo = item.parentNode;
     if (select === 'completed') {
       todo.style.display = 'none';
-      if (item.hasAttribute('checked')) {
+      if (item.childNodes[0].hasAttribute('checked')) {
         todo.style.display = '';
       }
     } else if (select === 'unCompleted') {
       todo.style.display = '';
-      if (item.hasAttribute('checked')) {
+      if (item.childNodes[0].hasAttribute('checked')) {
         todo.style.display = 'none';
       }
     } else {
@@ -110,7 +100,7 @@ function onStartSync() {
 }
 
 function onitemUpdate(e) {
-  let rows = e.detail;
+  let rows = e.detail.rows;
   let todoLists = '';
   syncDom.innerText = 'SYNCED';
   content.innerHTML = '';
@@ -125,20 +115,12 @@ function onitemUpdate(e) {
           date,
         },
       } = row;
-      const todolist = `<tr _title=${title} _date=${date} _id=${row.id} _rev=${row.doc._rev}>
-        <td>
-          <input type='checkbox' class="complete" ${complete ? 'checked' : ''} >
-        </td>
-        <td>
-          ${title}
-        </td>
-        <td>
-          ${date}
-        </td>
-        <td>
-          <button class='delete'>x</button>
-        </td>
-      </tr>`;
+      const todolist = `<div id="contentWrap"  _title=${title} _date=${date} _id=${row.id} _rev=${row.doc._rev}>
+          <span class="itemComplete"><input type='checkbox' ${complete ? 'checked' : ''} ></span>
+          <span class="itemDescription">${title}</span>
+          <span class="itemDate">${date}</span>
+          <span class='itemDelete'><button>x</button></span>
+      </div>`;
       todoLists += todolist;
     });
   }
