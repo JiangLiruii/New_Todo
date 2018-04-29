@@ -28,31 +28,25 @@
             <button id="addButton">+</button>
             <span id="prompt"></span>
             <select name="completeSelect" id="completeSelect">
-        <option value="all" selected>All</option>
-        <option value="completed">Completed</option>
-        <option value="unCompleted">Uncompleted</option>
-      </select>
-            <table>
-                <thead>
-                    <tr>
-                        <th>确认完成</th>
-                        <th width="50%">待办描述</th>
-                        <th>添加时间</th>
-                        <th>删除待办</th>
-                    </tr>
-                </thead>
-                <tbody id="listcontent">
-                </tbody>
-            </table>
-            <div class="container">
-
+                <option value="all" selected>All</option>
+                <option value="completed">Completed</option>
+                <option value="unCompleted">Uncompleted</option>
+            </select>
+            <div class="item">
+                <div id="title">
+                    <span class="itemComplete">确认完成</span>
+                    <span class="itemDescription">待办描述</span>
+                    <span class="itemDate">添加时间</span>
+                    <span class="itemDelete">删除待办</span>
+                </div>
+                <div id="content">
+                </div>
             </div>
         </main>
         <footer>
             <h3 id="syncDom"></h3>
         </footer>
     </div>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script src='./node_modules/pouchdb/dist/pouchdb.min.js'></script>
     <script src="js/todoView.js"></script>
     <script src="js/todoControl.js"></script>
