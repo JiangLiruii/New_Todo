@@ -1,16 +1,13 @@
 body {
     display: flex;
-    align-items: center;
-    min-height: 50rem;
+    min-width: 800px;
+    justify-content: center;
 }
 
 #all {
-    position: relative;
+    flex: 0 0 80%;
     background-image: url('todoImg.jpeg');
     background-size: 100%;
-    margin: auto;
-    width: 50%;
-    min-width: 20rem;
     border: 1px solid #cccccc;
     text-align: center;
 }
@@ -26,7 +23,7 @@ main>button {
     margin-left: 1em;
 }
 
-input {
+#todoInput {
     width: 50%;
     height: 2em;
     border-radius: 5em;
@@ -44,34 +41,31 @@ input {
     margin: 1em auto;
 }
 
-table {
-    margin: 1em auto;
-    padding: 1em;
-    background-color: rgba(207, 206, 206, 0.562);
-    box-shadow: 0em 1em 1em #888888;
-}
-
-.container {
+#title, #contentWrap{
+    width: 70%;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    align-content: flex-start;
-    flex-flow: row wrap;
+    background-color: rgba(207, 206, 206, 0.70);
+}
+.itemComplete, .itemDate, .itemDelete {
+    flex: 1 1 10%;
+    align-self: center;
 }
 
-th,
-tfoot {
-    margin: 1em;
-    color: rgb(102, 102, 102);
-    font-size: 1rem;
-    border-bottom: 1px solid rgb(73, 73, 73);
+input.itemComplete {
+    flex: 1 1 10%;
 }
-
-td {
-    border-bottom: 1px solid rgb(73, 73, 73);
-    font-size: 0.9rem;
+.itemDescription {  
+    flex: 2 1 10%;
+    align-self: center;
+}
+input[type='checkbox'], .itemDelete button  {
+    height: 1.5rem;
+    width: 1.5rem;
 }
 
 #syncDom {
+    width: 70%;
+    margin: 1rem auto;
     background-color: rgba(207, 206, 206, 0.82);
 }
