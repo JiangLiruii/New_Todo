@@ -47,16 +47,16 @@ main>button {
     display: flex;
     background-color: rgba(207, 206, 206, 0.70);
 }
-.itemComplete, .itemDate, .itemDelete {
-    flex: 1 1 10%;
+.itemComplete, .itemDate, .itemDelete, .itemFinishDate {
+    flex: 1 1 0;
     align-self: center;
 }
 
 input.itemComplete {
-    flex: 1 1 10%;
+    flex: 1 1 0;
 }
 .itemDescription {  
-    flex: 2 1 10%;
+    flex: 1 1 20%;
     align-self: center;
 }
 input[type='checkbox'], .itemDelete button  {

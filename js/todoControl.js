@@ -18,17 +18,16 @@ function sync() {
 
 function onitemAdd() {
   const todo = document.getElementById('todoInput').value;
+  const finishDate = document.getElementById('finishDate').value;
   const addDate = new Date();
   const data = {
-    _id: '',
-    title: '',
-    date: '',
+    _id: addDate.toISOString(),
+    title: todo,
+    date: `${addDate.getFullYear()}-${addDate.getMonth()}-${addDate.getDate()}`,
+    finishDate,
+    complete: false,
   };
 
-  data.complete = false;
-  data._id = addDate.toISOString();
-  data.title = todo;
-  data.date = `${addDate.getFullYear()}-${addDate.getMonth()}-${addDate.getDate()}`;
   db.put(data, (err, res) => {
     if (!err) {
       sync();

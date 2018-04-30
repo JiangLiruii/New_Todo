@@ -113,12 +113,15 @@ function onitemUpdate(e) {
           complete,
           title,
           date,
+          finishDate
         },
       } = row;
       const todolist = `<div id="contentWrap"  _title=${title} _date=${date} _id=${row.id} _rev=${row.doc._rev}>
           <span class="itemComplete"><input type='checkbox' ${complete ? 'checked' : ''} ></span>
           <span class="itemDescription">${title}</span>
           <span class="itemDate">${date}</span>
+          <span class="itemFinishDate">${finishDate}</span>
+          
           <span class='itemDelete'><button>x</button></span>
       </div>`;
       todoLists += todolist;
