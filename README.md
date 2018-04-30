@@ -1,6 +1,24 @@
 # New_Todo
 
-- Restart Todo Project
+##  Restart Todo Project
+
+## version 1.0.3
+
+### 新增功能
+
+- 添加待办预计完成时间字段,字段格式为yyyy-mm-dd
+
+## version 1.0.2
+
+### 新增功能
+
+- 更新采用Flex布局
+- 更新使用原生js,代替jQuery的使用.主要包括DOM操作和事件操作
+
+### 已知bug
+
+-  绑定和触发事件采用的标准浏览器方式
+-  使用非IE(包括Microsoft Eadge)均可正常使用,IE上无法使用.
 
 ## version 1.0.1
 
