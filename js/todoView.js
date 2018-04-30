@@ -3,6 +3,7 @@ const prompt = document.getElementById('prompt');
 const todoInput = document.getElementById('todoInput');
 const content = document.getElementById('content');
 const completeChange = document.getElementById('completeSelect')
+const title = document.getElementById('title')
 // 用于计数
 let time;
 
@@ -11,15 +12,15 @@ const itemDelete = new CustomEvent('itemDelete', { detail: {} })
 const onSyncRecieve = new CustomEvent('onSyncRecieve');
 const emptyInput = new CustomEvent('emptyInput');
 const startSync = new CustomEvent('startSync');
-const itemCompleteChange = new CustomEvent('itemCompleteChange', {
-  detail: {},
-});
+const itemCompleteChange = new CustomEvent('itemCompleteChange', { detail: {} });
 
 document.addEventListener('emptyInput', onEmpty);
 document.addEventListener('startSync', onStartSync);
 document.addEventListener('itemUpdate', onitemUpdate);
+document.addEventListener('click', onClickFunc);
 completeChange.addEventListener('change', onSelectChange)
-document.addEventListener('click', onClickFunc, true);
+title.addEventListener('click', onTitleClick)
+
 
 function onClickFunc(e) {
   if (e.target.parentNode.className === 'itemDelete') {
@@ -29,6 +30,16 @@ function onClickFunc(e) {
   } else if (e.target.id === 'addButton') {
     onAdd();
   }
+}
+
+function onTitleClick(e) {
+  // 根据e.target.class来排序
+  const className = `_${e.target.className.replace('item', '').toLowerCase()}`
+  Array.from(document.getElementsByClassName('contentWrap')).sort((itemA, itemB) => {
+    console.log(itemA.getAttribute(className) > itemB.getAttribute(className));
+    return !(itemA.getAttribute(className) > itemB.getAttribute(className));
+  })
+
 }
 
 function onAdd() {
@@ -102,30 +113,34 @@ function onStartSync() {
 function onitemUpdate(e) {
   let rows = e.detail.rows;
   let todoLists = '';
-  syncDom.innerText = 'SYNCED';
   content.innerHTML = '';
-
   todoInput.value = '';
   if (rows.length > 0) {
     rows.forEach((row) => {
-      const {
-        doc: {
-          complete,
-          title,
-          date,
-          finishDate
-        },
-      } = row;
-      const todolist = `<div id="contentWrap"  _title=${title} _date=${date} _id=${row.id} _rev=${row.doc._rev}>
-          <span class="itemComplete"><input type='checkbox' ${complete ? 'checked' : ''} ></span>
-          <span class="itemDescription">${title}</span>
-          <span class="itemDate">${date}</span>
-          <span class="itemFinishDate">${finishDate}</span>
-          
-          <span class='itemDelete'><button>x</button></span>
-      </div>`;
+      domSync(row);
+
+      const todolist = ;
       todoLists += todolist;
     });
   }
   content.innerHTML = todoLists;
+  syncDom.innerText = 'SYNCED';
+}
+
+function domSync(content) {
+  const {
+    doc: {
+      complete,
+      title,
+      date,
+      finishDate
+    },
+  } = content;
+  return `<div class="contentWrap"  _complete=${complete} _title=${title} _date=${date} _finishDate=${finishDate}  _id=${row.id} _rev=${row.doc._rev}>
+  <span class="itemComplete"><input type='checkbox' ${complete ? 'checked' : ''} ></span>
+  <span class="itemTitle">${title}</span>
+  <span class="itemDate">${date}</span>
+  <span class="itemFinishDate">${finishDate}</span>
+  <span class='itemDelete'><button>x</button></span>
+</div>`
 }

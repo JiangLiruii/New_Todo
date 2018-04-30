@@ -41,11 +41,11 @@ main>button {
     margin: 1em auto;
 }
 
-#title, #contentWrap{
+#title, .contentWrap{
     width: 70%;
     margin: 0 auto;
     display: flex;
-    background-color: rgba(207, 206, 206, 0.70);
+    background-color: rgba(207, 206, 206, 0.7);
 }
 .itemComplete, .itemDate, .itemDelete, .itemFinishDate {
     flex: 1 1 0;
@@ -55,7 +55,7 @@ main>button {
 input.itemComplete {
     flex: 1 1 0;
 }
-.itemDescription {  
+.itemTitle {  
     flex: 1 1 20%;
     align-self: center;
 }
