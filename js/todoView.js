@@ -130,6 +130,7 @@ function onitemUpdate(e) {
   let todoLists = '';
   content.innerHTML = '';
   todoInput.value = '';
+  doc.getElementById('finishDate').value = '';
   if (rows.length > 0) {
     rows.forEach((row) => {
       todoLists += domSync(row);
