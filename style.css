@@ -6,8 +6,8 @@ body {
 
 #all {
     flex: 0 0 80%;
-    background-image: url('todoImg.jpeg');
-    background-size: 100%;
+    background-image: url('./res/img/todoImg.jpeg');
+    background-size: contain;
     border: 1px solid #cccccc;
     text-align: center;
 }
@@ -16,19 +16,44 @@ main {
     position: relative;
 }
 
-main>button {
-    width: 2.5em;
-    height: 2.5em;
-    border-radius: 1em;
-    margin-left: 1em;
+#first {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 70%;
+    margin: 0 auto;
+    justify-content: space-around;
 }
 
 #todoInput {
-    width: 50%;
-    height: 2em;
-    border-radius: 5em;
-    padding-left: 1em;
-    box-shadow: 0em 1em 1em #888888;
+    flex: 0 0 60%;
+    font-size: 1rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    padding-left: 3rem;
+    box-shadow: 0em 0.5rem 1rem #888888;
+    background: rgba(179, 177, 177, 0.808) url('./res/img/new.png') no-repeat;
+    background-position: 0.5rem center;
+    background-size: 2rem;
+}
+
+#todoInput::placeholder {
+    color: rgba(0, 0, 0, 0.692);
+}
+
+#finishDate {
+    flex: 0 0 20%;
+    border-radius: 0.5rem;
+}
+
+#addButton {
+    flex: 0 0 5%;
+    height: 2rem;
+    min-width: 2rem;
+    align-self: center;
+    background: rgba(179, 177, 177, 0.808) url('./res/img/add.png') no-repeat center center;
+    background-size: 1.5rem 1.5rem;
+    border-radius: 2rem;
 }
 
 #prompt {
@@ -41,25 +66,55 @@ main>button {
     margin: 1em auto;
 }
 
-#title, .contentWrap{
+#title,
+.contentWrap {
     width: 70%;
+    border-radius: 0.5rem;
     margin: 0 auto;
     display: flex;
-    background-color: rgba(207, 206, 206, 0.7);
+    background-color: rgba(207, 206, 206, 0.6);
 }
-.itemComplete, .itemDate, .itemDelete, .itemFinishDate {
+
+#title {
+    background-color: rgba(207, 206, 206, 0.9);
+}
+
+.itemComplete,
+.itemDate,
+.itemDelete,
+.itemFinishDate {
     flex: 1 1 0;
     align-self: center;
+}
+
+#title span {
+    background: url('./res/img/sort.png') no-repeat content-box right;
+    background-size: 1rem;
+}
+
+#title span:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#title span:last-child {
+    background: inherit;
+    border-radius: 0.5rem;
+    cursor: inherit;
+    font-weight: normal;
 }
 
 input.itemComplete {
     flex: 1 1 0;
 }
-.itemTitle {  
+
+.itemTitle {
     flex: 1 1 20%;
     align-self: center;
 }
-input[type='checkbox'], .itemDelete button  {
+
+input[type='checkbox'],
+.itemDelete button {
     height: 1.5rem;
     width: 1.5rem;
 }
@@ -67,5 +122,6 @@ input[type='checkbox'], .itemDelete button  {
 #syncDom {
     width: 70%;
     margin: 1rem auto;
+    border-radius: 0.5rem;
     background-color: rgba(207, 206, 206, 0.82);
 }
