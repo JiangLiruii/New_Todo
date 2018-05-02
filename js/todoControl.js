@@ -1,24 +1,25 @@
 const db = new PouchDB('todos');
 const itemUpdate = new CustomEvent('itemUpdate', { detail: {} });
+const doc = document;
 
-document.addEventListener('onSyncRecieve', sync);
-document.addEventListener('itemDelete', onDbDelete);
-document.addEventListener('itemCompleteChange', onCompleteChange);
-document.addEventListener('itemAdd', onitemAdd);
+doc.addEventListener('onSyncRecieve', sync);
+doc.addEventListener('itemDelete', onDbDelete);
+doc.addEventListener('itemCompleteChange', onCompleteChange);
+doc.addEventListener('itemAdd', onitemAdd);
 
 function sync() {
   db.allDocs({
     include_docs: true,
     descending: true,
-  }, (err, doc) => {
-    itemUpdate.detail.rows = doc.rows;
-    document.dispatchEvent(itemUpdate);
+  }, (err, docs) => {
+    itemUpdate.detail.rows = docs.rows;
+    docs.dispatchEvent(itemUpdate);
   });
 }
 
 function onitemAdd() {
-  const todo = document.getElementById('todoInput').value;
-  const finishDate = document.getElementById('finishDate').value;
+  const todo = doc.getElementById('todoInput').value;
+  const finishDate = doc.getElementById('finishDate').value;
   const addDate = new Date();
   const data = {
     _id: addDate.toISOString(),
@@ -65,6 +66,6 @@ function onCompleteChange(e) {
   });
 }
 
-document.onload = (() => {
-  document.dispatchEvent(startSync);
+doc.onload = (() => {
+  doc.dispatchEvent(startSync);
 })();
