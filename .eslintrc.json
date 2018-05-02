@@ -3,6 +3,9 @@
     "rules": {
         "no-undef": "off",
         "no-underscore-dangle": "off",
-        "no-use-before-define": "off"
+        "no-use-before-define": "off",
+        "prefer-destructuring": "off",
+        "no-shadow": "off",
+        "array-callback-return": "off"
     }
 }
