@@ -2,6 +2,18 @@
 
 ##  Restart Todo Project
 
+## Todo Function
+
+- 日期筛选
+- 分页功能
+
+## version 1.0.4
+
+### 新增功能
+
+- 添加title的排序功能,默认升序,再次点击以后降序.
+- 删除待办没有添加排序功能
+
 ## version 1.0.3
 
 ### 新增功能
