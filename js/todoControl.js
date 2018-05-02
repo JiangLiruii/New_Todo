@@ -26,7 +26,7 @@ function onitemAdd() {
     _id: addDate.toISOString(),
     title: todo,
     date: `${addDate.getFullYear()}-${newMonth}-${newDate}`,
-    finishDate,
+    finishDate: finishDate || '无期限',
     complete: false,
   };
 
