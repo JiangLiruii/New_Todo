@@ -1,6 +1,5 @@
 const db = new PouchDB('todos');
 const itemUpdate = new CustomEvent('itemUpdate', { detail: {} });
-const doc = document;
 
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onDbDelete);
@@ -13,7 +12,7 @@ function sync() {
     descending: true,
   }, (err, docs) => {
     itemUpdate.detail.rows = docs.rows;
-    docs.dispatchEvent(itemUpdate);
+    doc.dispatchEvent(itemUpdate);
   });
 }
 
@@ -21,10 +20,12 @@ function onitemAdd() {
   const todo = doc.getElementById('todoInput').value;
   const finishDate = doc.getElementById('finishDate').value;
   const addDate = new Date();
+  const newMonth = addDate.getMonth() < 10 ? `0${addDate.getMonth()}` : addDate.getMonth();
+  const newDate = addDate.getDate() < 10 ? `0${addDate.getDate()}` : addDate.getDate();
   const data = {
     _id: addDate.toISOString(),
     title: todo,
-    date: `${addDate.getFullYear()}-${addDate.getMonth()}-${addDate.getDate()}`,
+    date: `${addDate.getFullYear()}-${newMonth}-${newDate}`,
     finishDate,
     complete: false,
   };
@@ -54,6 +55,7 @@ function onCompleteChange(e) {
     date,
     title,
     statue,
+    finishDate,
   } = e.detail;
   db.put({
     _id,
@@ -61,6 +63,7 @@ function onCompleteChange(e) {
     date,
     title,
     complete: !statue,
+    finishDate,
   }).then(() => {
     sync();
   });
