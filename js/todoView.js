@@ -11,13 +11,14 @@ let time;
 let descending = false;
 
 const itemAdd = new CustomEvent('itemAdd');
-const itemDelete = new CustomEvent('itemDelete', { detail: {} });
+const itemDelete = new CustomEvent('itemDelete', {
+  detail: {},
+});
 const onSyncRecieve = new CustomEvent('onSyncRecieve');
-const emptyInput = new CustomEvent('emptyInput');
-const startSync = new CustomEvent('startSync');
-const itemCompleteChange = new CustomEvent('itemCompleteChange', { detail: {} });
+const itemCompleteChange = new CustomEvent('itemCompleteChange', {
+  detail: {},
+});
 
-doc.addEventListener('emptyInput', onEmpty);
 doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
 doc.addEventListener('click', onClickFunc);
@@ -32,7 +33,26 @@ function onClickFunc(e) {
     onComplete(e.target);
   } else if (e.target.id === 'addButton') {
     onAdd();
+  } else if (e.target.className === 'pages') {
+    onPageClick(e.target);
   }
+}
+
+function onPageClick(element) {
+  let nextPage = +element.getAttribute('page');
+  switch (nextPage) {
+    case 0:
+      nextPage = 1;
+      break;
+    case -1:
+      nextPage = +itemUpdate.detail.pages;
+      break;
+    default:
+      break;
+  }
+
+  itemUpdate.detail.currentPage = nextPage;
+  onitemUpdate();
 }
 
 function onTitleClick(e) {
@@ -125,8 +145,10 @@ function onStartSync() {
   doc.dispatchEvent(onSyncRecieve);
 }
 
-function onitemUpdate(e) {
-  const rows = e.detail.rows;
+function onitemUpdate() {
+  const pages = itemUpdate.detail.pages;
+  const currentPage = itemUpdate.detail.currentPage || 1;
+  const rows = itemUpdate.detail.rows.slice((currentPage - 1) * 10, currentPage * 10);
   let todoLists = '';
   content.innerHTML = '';
   todoInput.value = '';
@@ -136,8 +158,21 @@ function onitemUpdate(e) {
       todoLists += domSync(row);
     });
   }
-  content.innerHTML = todoLists;
+  content.innerHTML = todoLists + paginate(pages, currentPage);
   syncDom.innerText = 'SYNCED';
+}
+
+function paginate(pages, currentPage) {
+  let pagination = '<br><span page="0" class="pages"><<</span>';
+  for (let i = 1; i <= pages; i += 1) {
+    if (i === currentPage) {
+      pagination += `<span page="${i}" class="pages active">${i}</span>`;
+    } else {
+      pagination += `<span page="${i}" class="pages">${i}</span>`;
+    }
+  }
+  pagination += '<span page="-1" class="pages">>></span>';
+  return pagination;
 }
 
 function domSync(row) {

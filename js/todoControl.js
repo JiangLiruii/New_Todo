@@ -1,8 +1,9 @@
 const db = new PouchDB('todos');
 const itemUpdate = new CustomEvent('itemUpdate', { detail: {} });
+const startSync = new CustomEvent('startSync');
 
 doc.addEventListener('onSyncRecieve', sync);
-doc.addEventListener('itemDelete', onDbDelete);
+doc.addEventListener('itemDelete', onItemDelete);
 doc.addEventListener('itemCompleteChange', onCompleteChange);
 doc.addEventListener('itemAdd', onitemAdd);
 
@@ -11,7 +12,10 @@ function sync() {
     include_docs: true,
     descending: true,
   }, (err, docs) => {
+    const totalRows = docs.rows.length;
+    const pages = Math.ceil(totalRows / 10);
     itemUpdate.detail.rows = docs.rows;
+    itemUpdate.detail.pages = pages;
     doc.dispatchEvent(itemUpdate);
   });
 }
@@ -40,7 +44,7 @@ function onitemAdd() {
   });
 }
 
-function onDbDelete(e) {
+function onItemDelete(e) {
   const row = e.detail;
   db.remove(row.id, row.rev)
     .then(() => {
