@@ -125,3 +125,16 @@ input[type='checkbox'],
     border-radius: 0.5rem;
     background-color: rgba(207, 206, 206, 0.82);
 }
+
+.pages {
+    padding: 0 0.5rem;
+    text-decoration-line: underline;
+}
+
+.pages.active {
+    text-decoration-line: none;
+}
+
+.pages:hover {
+    cursor: pointer;
+}
