@@ -6,6 +6,7 @@
         "no-use-before-define": "off",
         "prefer-destructuring": "off",
         "no-shadow": "off",
-        "array-callback-return": "off"
+        "array-callback-return": "off",
+        "no-debugger": "off"
     }
 }
