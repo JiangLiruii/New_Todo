@@ -4,7 +4,9 @@ const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');
 const content = doc.getElementById('content');
 const completeChange = doc.getElementById('completeSelect');
+const filter = doc.getElementById('filter');
 const title = doc.getElementById('title');
+const footer = doc.getElementsByTagName('footer')[0];
 // 用于计数
 let time;
 // 用于升降序
@@ -22,9 +24,8 @@ const itemCompleteChange = new CustomEvent('itemCompleteChange', {
 doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
 doc.addEventListener('click', onClickFunc);
-completeChange.addEventListener('change', onSelectChange);
 title.addEventListener('click', onTitleClick);
-
+filter.addEventListener('change', onFilterChange);
 
 function onClickFunc(e) {
   if (e.target.parentNode.className === 'itemDelete') {
@@ -35,6 +36,40 @@ function onClickFunc(e) {
     onAdd();
   } else if (e.target.className === 'pages') {
     onPageClick(e.target);
+  }
+}
+
+function onFilterChange(e) {
+  debugger;
+  if (e.target.type === 'date') {
+    onFilterDateChange(e);
+  } else {
+    onSelectChange(e);
+  }
+}
+
+function onFilterDateChange(e) {
+  debugger;
+  const changeValue = e.target.value || '无期限';
+  const completeTd = content.getElementsByClassName('itemComplete');
+  if (e.target.id === 'filterAdd') {
+    Array.from(completeTd).forEach((item) => {
+      const todo = item.parentNode;
+      if (todo.children[2].innerText === changeValue) {
+        todo.style.display = '';
+      } else {
+        todo.style.display = 'none';
+      }
+    });
+  } else if (e.target.id === 'filterComplete') {
+    Array.from(completeTd).forEach((item) => {
+      const todo = item.parentNode;
+      if (todo.children[3].innerText === changeValue) {
+        todo.style.display = '';
+      } else {
+        todo.style.display = 'none';
+      }
+    });
   }
 }
 
@@ -105,24 +140,28 @@ function onComplete(ele) {
 }
 
 function onSelectChange(e) {
-  const select = e.target.value;
+  const changeValue = e.target.value;
   const completeTd = content.getElementsByClassName('itemComplete');
-
-  e.stopPropagation();
   Array.from(completeTd).forEach((item) => {
-    todo = item.parentNode;
-    if (select === 'completed') {
-      todo.style.display = 'none';
-      if (item.childNodes[0].hasAttribute('checked')) {
-        todo.style.display = '';
-      }
-    } else if (select === 'unCompleted') {
-      todo.style.display = '';
-      if (item.childNodes[0].hasAttribute('checked')) {
+    const todo = item.parentNode;
+    switch (changeValue) {
+      case 'completed':
         todo.style.display = 'none';
-      }
-    } else {
-      todo.style.display = '';
+        if (item.childNodes[0].hasAttribute('checked')) {
+          todo.style.display = '';
+        }
+        break;
+      case 'unCompleted':
+        todo.style.display = '';
+        if (item.childNodes[0].hasAttribute('checked')) {
+          todo.style.display = 'none';
+        }
+        break;
+      case 'all':
+        todo.style.display = '';
+        break;
+      default:
+        break;
     }
   });
 }
@@ -158,21 +197,24 @@ function onitemUpdate() {
       todoLists += domSync(row);
     });
   }
-  content.innerHTML = todoLists + paginate(pages, currentPage);
+  content.innerHTML = todoLists;
+  paginate(pages, currentPage);
   syncDom.innerText = 'SYNCED';
 }
 
 function paginate(pages, currentPage) {
-  let pagination = '<br><span page="0" class="pages"><<</span>';
+  const pagination = doc.getElementById('pages');
+  let paginationHTML = '<br><span page="0" class="pages"><<</span>';
   for (let i = 1; i <= pages; i += 1) {
     if (i === currentPage) {
-      pagination += `<span page="${i}" class="pages active">${i}</span>`;
+      paginationHTML += `<span page="${i}" class="pages active">${i}</span>`;
     } else {
-      pagination += `<span page="${i}" class="pages">${i}</span>`;
+      paginationHTML += `<span page="${i}" class="pages">${i}</span>`;
     }
   }
-  pagination += '<span page="-1" class="pages">>></span>';
-  return pagination;
+  paginationHTML += '<span page="-1" class="pages">>></span>';
+  pagination.innerHTML = paginationHTML;
+  footer.insertBefore(pagination, syncDom);
 }
 
 function domSync(row) {

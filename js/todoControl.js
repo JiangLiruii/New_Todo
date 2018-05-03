@@ -24,8 +24,10 @@ function onitemAdd() {
   const todo = doc.getElementById('todoInput').value;
   const finishDate = doc.getElementById('finishDate').value;
   const addDate = new Date();
-  const newMonth = addDate.getMonth() < 10 ? `0${addDate.getMonth()}` : addDate.getMonth();
-  const newDate = addDate.getDate() < 10 ? `0${addDate.getDate()}` : addDate.getDate();
+  const month = addDate.getMonth() + 1;
+  const date = addDate.getDate();
+  const newMonth = month < 10 ? `0${month}` : month;
+  const newDate = date < 10 ? `0${date}` : date;
   const data = {
     _id: addDate.toISOString(),
     title: todo,
