@@ -30,11 +30,19 @@
                 <input type="button" id="addButton">
                 <span id="prompt"></span>
             </div>
-            <select name="completeSelect" id="completeSelect">
-                <option value="all" selected>All</option>
-                <option value="completed">Completed</option>
-                <option value="unCompleted">Uncompleted</option>
-            </select>
+            <div id="filter">
+                <span>完成情况筛选</span>
+                <select id="completeSelect">
+                        <option value="all" selected>All</option>
+                        <option value="completed">Completed</option>
+                        <option value="unCompleted">Uncompleted</option>
+                </select>
+                <br>
+                <span>添加时间筛选</span>
+                <input type="date" id="filterAdd" class="filter">
+                <span>完成时间筛选</span>
+                <input type="date" id="filterComplete" class="filter">
+            </div>
             <div class="item">
                 <div id="title">
                     <span class="itemComplete">确认完成</span>
@@ -48,6 +56,7 @@
             </div>
         </main>
         <footer>
+            <div id="pages"></div>
             <h3 id="syncDom"></h3>
         </footer>
     </div>
