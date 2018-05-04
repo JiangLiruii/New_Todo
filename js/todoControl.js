@@ -1,5 +1,6 @@
 const db = new PouchDB('todos');
 const itemUpdate = new CustomEvent('itemUpdate', { detail: {} });
+const itemChanged = new CustomEvent('itemChanged', { detail: {} });
 const startSync = new CustomEvent('startSync');
 
 doc.addEventListener('onSyncRecieve', sync);
@@ -85,8 +86,9 @@ function onItemDataChange(e) {
     title,
     complete,
     finishDate,
-  }).then(() => {
-    sync();
+  }).then((docs) => {
+    itemChanged.detail.rev = docs.rev;
+    doc.dispatchEvent(itemChanged);
   });
 }
 

@@ -26,6 +26,7 @@ doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
 doc.addEventListener('click', onClickFunc);
 doc.addEventListener('change', onChangeFunc);
+doc.addEventListener('itemChanged', onItemChanged);
 
 function onChangeFunc(e) {
   if (e.target.parentNode.id === 'filter') {
@@ -105,23 +106,19 @@ function onPageClick(element) {
 
 function onTitleClick(e) {
   // 根据e.target.class来排序
-  const className = `_${e.target.className.replace('item', '').toLowerCase()}`;
-  const sortedContent = Array.from(doc.getElementsByClassName('contentWrap'));
-  const oldContent = doc.getElementById('content');
-  oldContent.innerHTML = '';
+  let className = `${e.target.className.replace('item', '')}`;
+  className = className[0].toLowerCase() + className.substr(1);
 
+  const sortedContent = itemUpdate.detail.rows;
   if (!descending) {
-    sortedContent.sort((itemA, itemB) =>
-      (itemA.getAttribute(className) > itemB.getAttribute(className)));
+    sortedContent.sort((itemA, itemB) => itemA.doc[className] > itemB.doc[className]);
     descending = true;
   } else {
-    sortedContent.sort((itemA, itemB) =>
-      (itemA.getAttribute(className) < itemB.getAttribute(className)));
+    sortedContent.sort((itemA, itemB) => itemA.doc[className] < itemB.doc[className]);
     descending = false;
   }
-  sortedContent.map((item) => {
-    oldContent.appendChild(item);
-  });
+  itemUpdate.detail.rows = sortedContent;
+  doc.dispatchEvent(itemUpdate);
 }
 
 function onAdd() {
@@ -148,12 +145,18 @@ function onItemChange(e) {
   } else {
     itemChange.detail.complete = item.children[0].hasAttribute('checked');
   }
+  itemChange.detail.target = item;
   itemChange.detail._rev = item.getAttribute('_rev');
   itemChange.detail._id = item.getAttribute('_id');
   itemChange.detail.title = item.children[1].value;
   itemChange.detail.date = item.children[2].value;
   itemChange.detail.finishDate = item.children[3].value;
   doc.dispatchEvent(itemChange);
+}
+
+function onItemChanged() {
+  target = itemChange.detail.target;
+  target.setAttribute('_rev', itemChanged.detail.rev);
 }
 
 // function onSelectChange(e) {
