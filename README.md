@@ -5,6 +5,8 @@
 ## Todo Function
 
 - 待办项修改
+- bug
+  - 排序不是按照所有docs排序,而是某一页进行的排序
 
 ## version 1.1.0
 
