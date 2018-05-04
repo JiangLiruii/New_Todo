@@ -3,8 +3,6 @@ const syncDom = doc.getElementById('syncDom');
 const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');
 const content = doc.getElementById('content');
-const filter = doc.getElementById('filter');
-const title = doc.getElementById('title');
 const footer = doc.getElementsByTagName('footer')[0];
 // 用于计时
 let time;
@@ -58,34 +56,6 @@ function onFilterChange(e) {
   }
   doc.dispatchEvent(onSyncRecieve);
 }
-
-// function onFilterDateChange(e) {
-//   const changeValue = e.target.value || '';
-//   const contentWrap = content.getElementsByClassName('contentWrap');
-//   if (!changeValue) {
-//     Array.from(contentWrap).forEach((item) => {
-//       item.style.display = '';
-//     });
-//     return;
-//   }
-//   if (e.target.id === 'filterAdd') {
-//     Array.from(contentWrap).forEach((item) => {
-//       if (item.children[2].innerText === changeValue) {
-//         item.style.display = '';
-//       } else {
-//         item.style.display = 'none';
-//       }
-//     });
-//   } else if (e.target.id === 'filterComplete') {
-//     Array.from(contentWrap).forEach((item) => {
-//       if (item.children[3].innerText === changeValue) {
-//         item.style.display = '';
-//       } else {
-//         item.style.display = 'none';
-//       }
-//     });
-//   }
-// }
 
 function onPageClick(element) {
   let nextPage = +element.getAttribute('page');
@@ -158,33 +128,6 @@ function onItemChanged() {
   target = itemChange.detail.target;
   target.setAttribute('_rev', itemChanged.detail.rev);
 }
-
-// function onSelectChange(e) {
-//   const changeValue = e.target.value;
-//   const contentWrap = content.getElementsByClassName('contentWrap');
-//   Array.from(contentWrap).forEach((item) => {
-//     const checkbox = item.children[0].children[0];
-//     switch (changeValue) {
-//       case 'completed':
-//         if (checkbox.hasAttribute('checked')) {
-//           item.style.display = '';
-//         } else {
-//           item.style.display = 'none';
-//         }
-//         break;
-//       case 'unCompleted':
-//         if (checkbox.hasAttribute('checked')) {
-//           item.style.display = 'none';
-//         } else {
-//           item.style.display = '';
-//         }
-//         break;
-//       default:
-//         item.style.display = '';
-//         break;
-//     }
-//   });
-// }
 
 function onEmpty() {
   if (time) {

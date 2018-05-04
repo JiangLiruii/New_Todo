@@ -52,10 +52,9 @@ function onitemAdd() {
     complete: false,
   };
 
-  db.put(data, (err, res) => {
+  db.put(data, (err) => {
     if (!err) {
       sync();
-      console.log(res);
     } else {
       console.error('something error', err);
     }
