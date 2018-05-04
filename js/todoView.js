@@ -3,11 +3,10 @@ const syncDom = doc.getElementById('syncDom');
 const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');
 const content = doc.getElementById('content');
-const completeChange = doc.getElementById('completeSelect');
 const filter = doc.getElementById('filter');
 const title = doc.getElementById('title');
 const footer = doc.getElementsByTagName('footer')[0];
-// 用于计数
+// 用于计时
 let time;
 // 用于升降序
 let descending = false;
@@ -16,7 +15,7 @@ const itemAdd = new CustomEvent('itemAdd');
 const itemDelete = new CustomEvent('itemDelete', {
   detail: {},
 });
-const onSyncRecieve = new CustomEvent('onSyncRecieve');
+const onSyncRecieve = new CustomEvent('onSyncRecieve', { detail: {} });
 const itemCompleteChange = new CustomEvent('itemCompleteChange', {
   detail: {},
 });
@@ -40,38 +39,43 @@ function onClickFunc(e) {
 }
 
 function onFilterChange(e) {
-  debugger;
-  if (e.target.type === 'date') {
-    onFilterDateChange(e);
-  } else {
-    onSelectChange(e);
+  if (e.target.id === 'filterAdd') {
+    onSyncRecieve.detail.addDate = e.target.value;
+  } else if (e.target.id === 'filterComplete') {
+    onSyncRecieve.detail.finishDate = e.target.value;
+  } else if (e.target.id === 'completeSelect') {
+    onSyncRecieve.detail.complete = e.target.value;
   }
+  doc.dispatchEvent(onSyncRecieve);
 }
 
-function onFilterDateChange(e) {
-  debugger;
-  const changeValue = e.target.value || '无期限';
-  const completeTd = content.getElementsByClassName('itemComplete');
-  if (e.target.id === 'filterAdd') {
-    Array.from(completeTd).forEach((item) => {
-      const todo = item.parentNode;
-      if (todo.children[2].innerText === changeValue) {
-        todo.style.display = '';
-      } else {
-        todo.style.display = 'none';
-      }
-    });
-  } else if (e.target.id === 'filterComplete') {
-    Array.from(completeTd).forEach((item) => {
-      const todo = item.parentNode;
-      if (todo.children[3].innerText === changeValue) {
-        todo.style.display = '';
-      } else {
-        todo.style.display = 'none';
-      }
-    });
-  }
-}
+// function onFilterDateChange(e) {
+//   const changeValue = e.target.value || '';
+//   const contentWrap = content.getElementsByClassName('contentWrap');
+//   if (!changeValue) {
+//     Array.from(contentWrap).forEach((item) => {
+//       item.style.display = '';
+//     });
+//     return;
+//   }
+//   if (e.target.id === 'filterAdd') {
+//     Array.from(contentWrap).forEach((item) => {
+//       if (item.children[2].innerText === changeValue) {
+//         item.style.display = '';
+//       } else {
+//         item.style.display = 'none';
+//       }
+//     });
+//   } else if (e.target.id === 'filterComplete') {
+//     Array.from(contentWrap).forEach((item) => {
+//       if (item.children[3].innerText === changeValue) {
+//         item.style.display = '';
+//       } else {
+//         item.style.display = 'none';
+//       }
+//     });
+//   }
+// }
 
 function onPageClick(element) {
   let nextPage = +element.getAttribute('page');
@@ -120,7 +124,7 @@ function onAdd() {
 }
 
 function onDelete(ele) {
-  // todo 确认弹窗
+  // item 确认弹窗
   const tr = ele.parentNode.parentNode;
   itemDelete.detail.id = tr.getAttribute('_id');
   itemDelete.detail.rev = tr.getAttribute('_rev');
@@ -139,32 +143,32 @@ function onComplete(ele) {
   doc.dispatchEvent(itemCompleteChange);
 }
 
-function onSelectChange(e) {
-  const changeValue = e.target.value;
-  const completeTd = content.getElementsByClassName('itemComplete');
-  Array.from(completeTd).forEach((item) => {
-    const todo = item.parentNode;
-    switch (changeValue) {
-      case 'completed':
-        todo.style.display = 'none';
-        if (item.childNodes[0].hasAttribute('checked')) {
-          todo.style.display = '';
-        }
-        break;
-      case 'unCompleted':
-        todo.style.display = '';
-        if (item.childNodes[0].hasAttribute('checked')) {
-          todo.style.display = 'none';
-        }
-        break;
-      case 'all':
-        todo.style.display = '';
-        break;
-      default:
-        break;
-    }
-  });
-}
+// function onSelectChange(e) {
+//   const changeValue = e.target.value;
+//   const contentWrap = content.getElementsByClassName('contentWrap');
+//   Array.from(contentWrap).forEach((item) => {
+//     const checkbox = item.children[0].children[0];
+//     switch (changeValue) {
+//       case 'completed':
+//         if (checkbox.hasAttribute('checked')) {
+//           item.style.display = '';
+//         } else {
+//           item.style.display = 'none';
+//         }
+//         break;
+//       case 'unCompleted':
+//         if (checkbox.hasAttribute('checked')) {
+//           item.style.display = 'none';
+//         } else {
+//           item.style.display = '';
+//         }
+//         break;
+//       default:
+//         item.style.display = '';
+//         break;
+//     }
+//   });
+// }
 
 function onEmpty() {
   if (time) {
@@ -181,6 +185,9 @@ function onEmpty() {
 
 function onStartSync() {
   syncDom.innerText = 'SYNCING';
+  onSyncRecieve.detail.complete = 'all';
+  onSyncRecieve.detail.addDate = '';
+  onSyncRecieve.detail.finishDate = '';
   doc.dispatchEvent(onSyncRecieve);
 }
 
