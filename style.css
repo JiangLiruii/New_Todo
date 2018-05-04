@@ -103,6 +103,13 @@ main {
     font-weight: normal;
 }
 
+.contentWrap>input {
+    background-color: rgba(207, 206, 206, 0.9);
+    height: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
 input.itemComplete {
     flex: 1 1 0;
 }
