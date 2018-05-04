@@ -7,6 +7,7 @@
         "prefer-destructuring": "off",
         "no-shadow": "off",
         "array-callback-return": "off",
-        "no-debugger": "off"
+        "no-debugger": "off",
+        "no-param-reassign": "off"
     }
 }
