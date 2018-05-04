@@ -15,26 +15,35 @@ const itemAdd = new CustomEvent('itemAdd');
 const itemDelete = new CustomEvent('itemDelete', {
   detail: {},
 });
-const onSyncRecieve = new CustomEvent('onSyncRecieve', { detail: {} });
-const itemCompleteChange = new CustomEvent('itemCompleteChange', {
+const onSyncRecieve = new CustomEvent('onSyncRecieve', {
+  detail: {},
+});
+const itemChange = new CustomEvent('itemChange', {
   detail: {},
 });
 
 doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
 doc.addEventListener('click', onClickFunc);
-title.addEventListener('click', onTitleClick);
-filter.addEventListener('change', onFilterChange);
+doc.addEventListener('change', onChangeFunc);
+
+function onChangeFunc(e) {
+  if (e.target.parentNode.id === 'filter') {
+    onFilterChange(e);
+  } else if (e.target.parentNode.className === 'contentWrap') {
+    onItemChange(e);
+  }
+}
 
 function onClickFunc(e) {
   if (e.target.parentNode.className === 'itemDelete') {
     onDelete(e.target);
-  } else if (e.target.parentNode.className === 'itemComplete') {
-    onComplete(e.target);
   } else if (e.target.id === 'addButton') {
     onAdd();
   } else if (e.target.className === 'pages') {
     onPageClick(e.target);
+  } else if (e.target.parentNode.id === 'title') {
+    onTitleClick(e);
   }
 }
 
@@ -131,16 +140,20 @@ function onDelete(ele) {
   doc.dispatchEvent(itemDelete);
 }
 
-function onComplete(ele) {
-  const tr = ele.parentNode.parentNode;
-  const statue = ele.hasAttribute('checked');
-  itemCompleteChange.detail.statue = statue;
-  itemCompleteChange.detail._rev = tr.getAttribute('_rev');
-  itemCompleteChange.detail._id = tr.getAttribute('_id');
-  itemCompleteChange.detail.date = tr.getAttribute('_date');
-  itemCompleteChange.detail.title = tr.getAttribute('_title');
-  itemCompleteChange.detail.finishDate = tr.getAttribute('_finishDate');
-  doc.dispatchEvent(itemCompleteChange);
+function onItemChange(e) {
+  const item = e.target.parentNode;
+  // 单击完成触发事件
+  if (e.target.className === 'itemComplete') {
+    itemChange.detail.complete = !item.children[0].hasAttribute('checked');
+  } else {
+    itemChange.detail.complete = item.children[0].hasAttribute('checked');
+  }
+  itemChange.detail._rev = item.getAttribute('_rev');
+  itemChange.detail._id = item.getAttribute('_id');
+  itemChange.detail.title = item.children[1].value;
+  itemChange.detail.date = item.children[2].value;
+  itemChange.detail.finishDate = item.children[3].value;
+  doc.dispatchEvent(itemChange);
 }
 
 // function onSelectChange(e) {
@@ -236,10 +249,10 @@ function domSync(row) {
     id,
   } = row;
   return `<div class="contentWrap"  _complete=${complete} _title=${title} _date=${date} _finishDate=${finishDate}  _id=${id} _rev=${_rev}>
-  <span class="itemComplete"><input type='checkbox' ${complete ? 'checked' : ''} ></span>
-  <span class="itemTitle">${title}</span>
-  <span class="itemDate">${date}</span>
-  <span class="itemFinishDate">${finishDate}</span>
-  <span class='itemDelete'><button>x</button></span>
+  <input class="itemComplete" type='checkbox' ${complete ? 'checked' : ''} >
+  <input class="itemTitle" value=${title}>
+  <input type="date" class="itemDate" value=${date}>
+  <input type="date" class="itemFinishDate" value=${finishDate}>
+  <span class='itemDelete' value=><button class='itemDelete'>x</button></span>
 </div>`;
 }

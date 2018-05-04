@@ -4,7 +4,7 @@ const startSync = new CustomEvent('startSync');
 
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onItemDelete);
-doc.addEventListener('itemCompleteChange', onCompleteChange);
+doc.addEventListener('itemChange', onItemDataChange);
 doc.addEventListener('itemAdd', onitemAdd);
 
 function sync() {
@@ -47,7 +47,7 @@ function onitemAdd() {
     _id: addDate.toISOString(),
     title: todo,
     date: `${addDate.getFullYear()}-${newMonth}-${newDate}`,
-    finishDate: finishDate || '无期限',
+    finishDate: finishDate || null,
     complete: false,
   };
 
@@ -69,13 +69,13 @@ function onItemDelete(e) {
     });
 }
 
-function onCompleteChange(e) {
+function onItemDataChange(e) {
   const {
     _id,
     _rev,
     date,
     title,
-    statue,
+    complete,
     finishDate,
   } = e.detail;
   db.put({
@@ -83,7 +83,7 @@ function onCompleteChange(e) {
     _rev,
     date,
     title,
-    complete: !statue,
+    complete,
     finishDate,
   }).then(() => {
     sync();
