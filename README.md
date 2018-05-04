@@ -4,8 +4,15 @@
 
 ## Todo Function
 
-- bug
-  - 单页排序不是按照所有docs排序,而是某一页进行的排序
+## version 1.2.0
+
+### 新增功能
+
+- 待办项的排序为所有items的全排序
+- bug修复
+  - 待办项修改之后的item维持不变
+- 优化
+  - 删除注释代码以及不必要的console
 
 ## version 1.1.1
 
