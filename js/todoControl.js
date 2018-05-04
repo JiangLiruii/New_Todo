@@ -12,10 +12,25 @@ function sync() {
     include_docs: true,
     descending: true,
   }, (err, docs) => {
-    const totalRows = docs.rows.length;
-    const pages = Math.ceil(totalRows / 10);
-    itemUpdate.detail.rows = docs.rows;
-    itemUpdate.detail.pages = pages;
+    const {
+      complete,
+      addDate,
+      finishDate,
+    } = onSyncRecieve.detail;
+    const rowsSend = [];
+    docs.rows.forEach((row) => {
+      const dateBoolean = (!addDate || row.doc.date === addDate) &&
+                (!finishDate || row.doc.finishDate === finishDate);
+      if (complete === 'all' && dateBoolean) {
+        rowsSend.push(row);
+      } else if (row.doc.complete === (complete === 'completed') && dateBoolean) {
+        rowsSend.push(row);
+      }
+    });
+
+    const totalRows = rowsSend.length;
+    itemUpdate.detail.rows = rowsSend;
+    itemUpdate.detail.pages = Math.ceil(totalRows / 10);
     doc.dispatchEvent(itemUpdate);
   });
 }
