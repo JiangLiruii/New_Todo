@@ -9,22 +9,18 @@ let time;
 // 用于升降序
 let descending = false;
 
-const itemAdd = new CustomEvent('itemAdd');
-const itemDelete = new CustomEvent('itemDelete', {
-  detail: {},
-});
-const onSyncRecieve = new CustomEvent('onSyncRecieve', {
-  detail: {},
-});
-const itemChange = new CustomEvent('itemChange', {
-  detail: {},
-});
+const itemAdd = new CustomEvent('itemAdd', { detail: {} });
+const itemDelete = new CustomEvent('itemDelete', { detail: {} });
+const onSyncRecieve = new CustomEvent('onSyncRecieve', { detail: {} });
+const itemChange = new CustomEvent('itemChange', { detail: {} });
 
 doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
 doc.addEventListener('click', onClickFunc);
 doc.addEventListener('change', onChangeFunc);
 doc.addEventListener('itemChanged', onItemChanged);
+doc.addEventListener('itemDeleted', onItemDeleted);
+doc.addEventListener('itemAdded', onItemAdded);
 
 function onChangeFunc(e) {
   if (e.target.parentNode.id === 'filter') {
@@ -64,7 +60,7 @@ function onPageClick(element) {
       nextPage = 1;
       break;
     case -1:
-      nextPage = +itemUpdate.detail.pages;
+      nextPage = Math.ceil(itemUpdate.detail.rows.length / 10);
       break;
     default:
       break;
@@ -81,10 +77,16 @@ function onTitleClick(e) {
 
   const sortedContent = itemUpdate.detail.rows;
   if (!descending) {
-    sortedContent.sort((itemA, itemB) => itemA.doc[className] > itemB.doc[className]);
+    sortedContent.sort((itemA, itemB) => {
+      console.log(itemA[className], itemB[className], itemA[className] > itemB[className]);
+      return itemA[className] < itemB[className];
+    });
     descending = true;
   } else {
-    sortedContent.sort((itemA, itemB) => itemA.doc[className] < itemB.doc[className]);
+    sortedContent.sort((itemA, itemB) => {
+      console.log(itemA[className], itemB[className], itemA[className] < itemB[className]);
+      return itemA[className] > itemB[className];
+    });
     descending = false;
   }
   itemUpdate.detail.rows = sortedContent;
@@ -92,19 +94,37 @@ function onTitleClick(e) {
 }
 
 function onAdd() {
+  const finishDate = doc.getElementById('finishDate').value;
+  const date = new Date();
+  const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`;
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
+  const newDate = `${date.getFullYear()}-${month}-${day}`;
   if (todoInput.value.trim() === '') {
     onEmpty();
   } else {
+    itemAdd.detail._id = date.getTime().toString();
+    itemAdd.detail.title = todoInput.value.trim();
+    itemAdd.detail.date = newDate;
+    itemAdd.detail.finishDate = finishDate || newDate;
+    itemAdd.detail.complete = false;
+    itemAdd.detail._rev = null;
     doc.dispatchEvent(itemAdd);
   }
+}
+function onItemAdded() {
+  onitemUpdate();
 }
 
 function onDelete(ele) {
   // item 确认弹窗
-  const tr = ele.parentNode.parentNode;
-  itemDelete.detail.id = tr.getAttribute('_id');
-  itemDelete.detail.rev = tr.getAttribute('_rev');
+  const item = ele.parentNode.parentNode;
+  itemDelete.detail.id = item.getAttribute('_id');
+  itemDelete.detail.rev = item.getAttribute('_rev');
+  itemDelete.detail.source = item;
   doc.dispatchEvent(itemDelete);
+}
+function onItemDeleted() {
+  onitemUpdate();
 }
 
 function onItemChange(e) {
@@ -112,6 +132,7 @@ function onItemChange(e) {
   // 单击完成触发事件
   if (e.target.className === 'itemComplete') {
     itemChange.detail.complete = !item.children[0].hasAttribute('checked');
+    item.setAttribute('_complete', itemChange.detail.complete);
   } else {
     itemChange.detail.complete = item.children[0].hasAttribute('checked');
   }
@@ -125,8 +146,7 @@ function onItemChange(e) {
 }
 
 function onItemChanged() {
-  target = itemChange.detail.target;
-  target.setAttribute('_rev', itemChanged.detail.rev);
+  onitemUpdate();
 }
 
 function onEmpty() {
@@ -151,16 +171,16 @@ function onStartSync() {
 }
 
 function onitemUpdate() {
-  const pages = itemUpdate.detail.pages;
+  const pages = Math.ceil(itemUpdate.detail.rows.length / 10);
   const currentPage = itemUpdate.detail.currentPage || 1;
   const rows = itemUpdate.detail.rows.slice((currentPage - 1) * 10, currentPage * 10);
+  todoInput.value = '';
   let todoLists = '';
   content.innerHTML = '';
-  todoInput.value = '';
   doc.getElementById('finishDate').value = '';
   if (rows.length > 0) {
     rows.forEach((row) => {
-      todoLists += domSync(row);
+      todoLists += itemDomCreate(row);
     });
   }
   content.innerHTML = todoLists;
@@ -183,18 +203,16 @@ function paginate(pages, currentPage) {
   footer.insertBefore(pagination, syncDom);
 }
 
-function domSync(row) {
+function itemDomCreate(row) {
   const {
-    doc: {
-      complete,
-      title,
-      date,
-      finishDate,
-      _rev,
-    },
-    id,
+    complete,
+    title,
+    date,
+    finishDate,
+    _rev,
+    _id,
   } = row;
-  return `<div class="contentWrap"  _complete=${complete} _title=${title} _date=${date} _finishDate=${finishDate}  _id=${id} _rev=${_rev}>
+  return `<div class="contentWrap"  _complete=${complete} _title=${title} _date=${date} _finishDate=${finishDate}  _id=${_id} _rev=${_rev}>
   <input class="itemComplete" type='checkbox' ${complete ? 'checked' : ''} >
   <input class="itemTitle" value=${title}>
   <input type="date" class="itemDate" value=${date}>

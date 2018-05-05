@@ -2,6 +2,8 @@ const db = new PouchDB('todos');
 const itemUpdate = new CustomEvent('itemUpdate', { detail: {} });
 const itemChanged = new CustomEvent('itemChanged', { detail: {} });
 const startSync = new CustomEvent('startSync');
+const itemDeleted = new CustomEvent('itemDeleted', { detail: {} });
+const itemAdded = new CustomEvent('itemAdded', { detail: {} });
 
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onItemDelete);
@@ -19,57 +21,66 @@ function sync() {
       finishDate,
     } = onSyncRecieve.detail;
     const rowsSend = [];
+
     docs.rows.forEach((row) => {
       const dateBoolean = (!addDate || row.doc.date === addDate) &&
-                (!finishDate || row.doc.finishDate === finishDate);
-      if (complete === 'all' && dateBoolean) {
-        rowsSend.push(row);
+        (!finishDate || row.doc.finishDate === finishDate);
+      if (complete === 'all' && !addDate && !finishDate) {
+        rowsSend.push(row.doc);
+      } else if (complete === 'all' && dateBoolean) {
+        rowsSend.push(row.doc);
       } else if (row.doc.complete === (complete === 'completed') && dateBoolean) {
-        rowsSend.push(row);
+        rowsSend.push(row.doc);
       }
     });
 
-    const totalRows = rowsSend.length;
     itemUpdate.detail.rows = rowsSend;
-    itemUpdate.detail.pages = Math.ceil(totalRows / 10);
     doc.dispatchEvent(itemUpdate);
   });
 }
 
 function onitemAdd() {
-  const todo = doc.getElementById('todoInput').value;
-  const finishDate = doc.getElementById('finishDate').value;
-  const addDate = new Date();
-  const month = addDate.getMonth() + 1;
-  const date = addDate.getDate();
-  const newMonth = month < 10 ? `0${month}` : month;
-  const newDate = date < 10 ? `0${date}` : date;
-  const data = {
-    _id: addDate.toISOString(),
-    title: todo,
-    date: `${addDate.getFullYear()}-${newMonth}-${newDate}`,
-    finishDate: finishDate || null,
-    complete: false,
-  };
-
-  db.put(data, (err) => {
+  db.put(itemAdd.detail, (err, res) => {
     if (!err) {
-      sync();
+      itemAdd.detail._rev = res.rev;
+      const {
+        complete,
+        title,
+        date,
+        finishDate,
+        _rev,
+        _id,
+      } = itemAdd.detail;
+      itemUpdate.detail.rows.unshift({
+        complete,
+        title,
+        date,
+        finishDate,
+        _rev,
+        _id,
+      });
+      doc.dispatchEvent(itemAdded);
     } else {
       console.error('something error', err);
     }
   });
 }
 
-function onItemDelete(e) {
-  const row = e.detail;
-  db.remove(row.id, row.rev)
+function onItemDelete() {
+  const rows = itemUpdate.detail.rows;
+  db.remove(itemDelete.detail.id, itemDelete.detail.rev)
     .then(() => {
-      sync();
+      itemDeleted.detail.target = itemDelete.detail.source;
+      rows.forEach((row) => {
+        if (row._id === itemDelete.detail.id) {
+          rows.splice(rows.indexOf(row), 1);
+        }
+      });
+      doc.dispatchEvent(itemDeleted);
     });
 }
 
-function onItemDataChange(e) {
+function onItemDataChange() {
   const {
     _id,
     _rev,
@@ -77,7 +88,7 @@ function onItemDataChange(e) {
     title,
     complete,
     finishDate,
-  } = e.detail;
+  } = itemChange.detail;
   db.put({
     _id,
     _rev,
@@ -87,10 +98,18 @@ function onItemDataChange(e) {
     finishDate,
   }).then((docs) => {
     itemChanged.detail.rev = docs.rev;
+    itemUpdate.detail.rows.forEach((row) => {
+      if (row._id === _id) {
+        row.date = date;
+        row.title = title;
+        row.finishDate = finishDate;
+        row._rev = docs.rev;
+        row.complete = complete;
+      }
+    });
     doc.dispatchEvent(itemChanged);
   });
 }
-
 doc.onload = (() => {
   doc.dispatchEvent(startSync);
 })();
