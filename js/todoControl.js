@@ -1,4 +1,4 @@
-import { doc, startSync, itemUpdate, db, itemAdd, ItemDelete, onSyncRecieve, itemChange } from './todoEvents';
+import { doc, startSync, itemUpdate, db, itemAdd, itemDelete, onSyncRecieve, itemChange } from './todoEvents';
 
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onItemDelete);
@@ -61,7 +61,8 @@ function onitemAdd() {
 }
 
 function onItemDelete() {
-  const data = ItemDelete.detail.data;
+  const data = itemDelete.detail.data;
+  const rows = itemUpdate.detail.rows;
   db.remove(data.id, data.rev)
     .then(() => {
       rows.forEach((row) => {

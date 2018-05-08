@@ -127,7 +127,7 @@ function onItemChange(e) {
   } else {
     complete = item.children[0].hasAttribute('checked');
   }
-  itemchange.data = {
+  itemChange.detail.data = {
     complete,
     _rev: item.getAttribute('_rev'),
     _id: item.getAttribute('_id'),
