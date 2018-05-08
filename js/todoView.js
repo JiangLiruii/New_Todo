@@ -11,26 +11,16 @@ let time;
 let descending = false;
 doc.addEventListener('startSync', onStartSync);
 doc.addEventListener('itemUpdate', onitemUpdate);
-doc.addEventListener('click', onClickFunc);
-doc.addEventListener('change', onChangeFunc);
-
-function onChangeFunc(e) {
-  if (e.target.parentNode.id === 'filter') {
-    onFilterChange(e);
-  } else if (e.target.parentNode.className === 'contentWrap') {
-    onItemChange(e);
-  }
-}
+doc.getElementById('title').addEventListener('click', onTitleClick);
+doc.getElementById('addButton').addEventListener('click', onAdd);
+doc.getElementById('pages').addEventListener('click', onPageClick);
+doc.getElementById('content').addEventListener('click', onClickFunc);
+doc.getElementById('filter').addEventListener('change', onFilterChange);
+doc.getElementById('content').addEventListener('change', onItemChange);
 
 function onClickFunc(e) {
   if (e.target.parentNode.className === 'itemDelete') {
     onDelete(e.target);
-  } else if (e.target.id === 'addButton') {
-    onAdd();
-  } else if (e.target.className === 'pages') {
-    onPageClick(e.target);
-  } else if (e.target.parentNode.id === 'title') {
-    onTitleClick(e);
   }
 }
 
