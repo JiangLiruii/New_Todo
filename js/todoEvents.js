@@ -1,3 +1,6 @@
+/**
+ * 创建公共变量,包括自定义事件,document对象和db对象
+ */
 const doc = document;
 const itemAdd = new CustomEvent('itemAdd', {
   detail: { data: {} },

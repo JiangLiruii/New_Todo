@@ -1,10 +1,17 @@
+/**
+ * 用于数据相关的操作,包括
+ * 1 与数据库的同步
+ * 2 数据项的增加,删除和修改
+ */
 import { doc, startSync, itemUpdate, db, itemAdd, itemDelete, onSyncRecieve, itemChange } from './todoEvents';
 
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onItemDelete);
 doc.addEventListener('itemChange', onItemDataChange);
 doc.addEventListener('itemAdd', onitemAdd);
-
+/**
+ * 与数据库同步,获取初始数据保存到缓存中
+ */
 function sync() {
   db.allDocs({
     include_docs: true,
@@ -18,7 +25,7 @@ function sync() {
     const rowsSend = [];
     docs.rows.forEach((row) => {
       const dateBoolean = (!addDate || row.doc.date === addDate) &&
-                (!finishDate || row.doc.finishDate === finishDate);
+        (!finishDate || row.doc.finishDate === finishDate);
       if (complete === 'all' && !addDate && !finishDate) {
         rowsSend.push(row.doc);
       } else if (complete === 'all' && dateBoolean) {
@@ -31,7 +38,9 @@ function sync() {
     doc.dispatchEvent(itemUpdate);
   });
 }
-
+/**
+ * 当数据项增加时调用
+ */
 function onitemAdd() {
   const data = itemAdd.detail.data;
   db.put(data, (err, res) => {
@@ -59,7 +68,9 @@ function onitemAdd() {
     }
   });
 }
-
+/**
+ * 当数据项删除时调用
+ */
 function onItemDelete() {
   const data = itemDelete.detail.data;
   const rows = itemUpdate.detail.rows;
@@ -73,7 +84,9 @@ function onItemDelete() {
       doc.dispatchEvent(itemUpdate);
     });
 }
-
+/**
+ * 当数据项改变时调用
+ */
 function onItemDataChange() {
   const {
     _id,

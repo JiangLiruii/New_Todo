@@ -1,3 +1,6 @@
+/**
+ * 用于根据获取到的数据呈现视图和用户交互
+ */
 import { itemUpdate, itemAdd, itemDelete, onSyncRecieve, itemChange, doc } from './todoEvents';
 
 const syncDom = doc.getElementById('syncDom');
@@ -17,7 +20,11 @@ doc.getElementById('pages').addEventListener('click', onPageClick);
 doc.getElementById('content').addEventListener('click', onClickFunc);
 doc.getElementById('filter').addEventListener('change', onFilterChange);
 doc.getElementById('content').addEventListener('change', onItemChange);
-
+/**
+ *
+ * @param {Event} e 点击事件
+ * 对待办项列表中的点击事件进行区分响应
+ */
 function onClickFunc(e) {
   if (e.target.parentNode.className === 'itemDelete') {
     onDelete(e.target);
@@ -52,9 +59,12 @@ function onPageClick(element) {
   itemUpdate.detail.currentPage = nextPage;
   onitemUpdate();
 }
-
+/**
+ *
+ * @param {event} e 触发事件
+ * 当点击title时进行排序函数
+ */
 function onTitleClick(e) {
-  // 根据e.target.class来排序
   let className = `${e.target.className.replace('item', '')}`;
   className = className[0].toLowerCase() + className.substr(1);
 
@@ -106,7 +116,10 @@ function onDelete(ele) {
   };
   doc.dispatchEvent(itemDelete);
 }
-
+/**
+ * @param {event} e change事件
+ * 当有代办项改变时触发
+ */
 function onItemChange(e) {
   const item = e.target.parentNode;
   let complete = '';
@@ -149,7 +162,16 @@ function onStartSync() {
   data.finishDate = '';
   doc.dispatchEvent(onSyncRecieve);
 }
-
+/**
+ * 最重要的更新函数,在以下情况调用
+ * 1 初始化页面时
+ * 2 待办项增加时
+ * 3 待办项删除时
+ * 4 当待办数据内容改变时
+ * 5 对待办项进行排序时
+ * 6 筛选条件改变时
+ * 7 页面跳转时
+ */
 function onitemUpdate() {
   const pages = Math.ceil(itemUpdate.detail.rows.length / 10);
   const currentPage = itemUpdate.detail.currentPage || 1;
@@ -182,7 +204,10 @@ function paginate(pages, currentPage) {
   pagination.innerHTML = paginationHTML;
   footer.insertBefore(pagination, syncDom);
 }
-
+/**
+ * @param {alldocs.doc.row} row 待办项
+ * 创建待办项的DOM描述
+ */
 function itemDomCreate(row) {
   const {
     complete,
