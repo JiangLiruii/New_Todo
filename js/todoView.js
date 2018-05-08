@@ -210,9 +210,3 @@ function itemDomCreate(row) {
     <span class='itemDelete' value=><button class='itemDelete'>x</button></span>
   </div>`;
 }
-export {
-  itemAdd,
-  itemDelete,
-  onSyncRecieve,
-  itemChange,
-};
