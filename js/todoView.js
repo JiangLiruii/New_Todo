@@ -1,8 +1,11 @@
 /**
  * 用于根据获取到的数据呈现视图和用户交互
  */
-import { itemUpdate, itemAdd, itemDelete, onSyncRecieve, itemChange, doc } from './todoEvents';
+import todoEvent from './todoEvents';
 
+const {
+  itemUpdate, itemAdd, itemDelete, onSyncRecieve, itemChange, doc,
+} = todoEvent;
 const syncDom = doc.getElementById('syncDom');
 const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');

@@ -3,8 +3,11 @@
  * 1 与数据库的同步
  * 2 数据项的增加,删除和修改
  */
-import { doc, startSync, itemUpdate, db, itemAdd, itemDelete, onSyncRecieve, itemChange } from './todoEvents';
+import todoEvent from './todoEvents';
 
+const {
+  doc, startSync, itemUpdate, db, itemAdd, itemDelete, onSyncRecieve, itemChange,
+} = todoEvent;
 doc.addEventListener('onSyncRecieve', sync);
 doc.addEventListener('itemDelete', onItemDelete);
 doc.addEventListener('itemChange', onItemDataChange);

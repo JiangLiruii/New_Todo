@@ -19,4 +19,7 @@ const itemUpdate = new CustomEvent('itemUpdate', {
 });
 const startSync = new CustomEvent('startSync');
 const db = new PouchDB('todos');
-export { doc, itemAdd, itemDelete, onSyncRecieve, itemChange, itemUpdate, startSync, db };
+const todoEvent = {
+  doc, itemAdd, itemDelete, onSyncRecieve, itemChange, itemUpdate, startSync, db,
+};
+export default todoEvent;
