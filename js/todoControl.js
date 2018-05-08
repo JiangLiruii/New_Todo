@@ -1,9 +1,8 @@
 const itemUpdate = new CustomEvent('itemUpdate', {
   detail: { data: {} },
 });
-const startSync = new CustomEvent('startSync');
-
 (function startControl(doc) {
+  const startSync = new CustomEvent('startSync');
   const db = new PouchDB('todos');
   doc.addEventListener('onSyncRecieve', sync);
   doc.addEventListener('itemDelete', onItemDelete);
@@ -66,8 +65,7 @@ const startSync = new CustomEvent('startSync');
   }
 
   function onItemDelete() {
-    const data = itemUpdate.detail.data;
-    const rows = itemUpdate.detail.rows;
+    const data = ItemDelete.detail.data;
     db.remove(data.id, data.rev)
       .then(() => {
         rows.forEach((row) => {
