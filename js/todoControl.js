@@ -2,9 +2,7 @@ const itemUpdate = new CustomEvent('itemUpdate', {
   detail: { data: {} },
 });
 const startSync = new CustomEvent('startSync');
-const itemAdded = new CustomEvent('itemAdded', {
-  detail: { data: {} },
-});
+
 (function startControl(doc) {
   const db = new PouchDB('todos');
   doc.addEventListener('onSyncRecieve', sync);
@@ -60,7 +58,7 @@ const itemAdded = new CustomEvent('itemAdded', {
           _rev,
           _id,
         });
-        doc.dispatchEvent(itemAdded);
+        doc.dispatchEvent(itemUpdate);
       } else {
         console.error('something error', err);
       }
