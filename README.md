@@ -4,6 +4,13 @@
 
 ## Todo Function
 
+## version 1.2.2
+
+### 优化
+
+- 添加babel,将ES6语法编译为ES5确保兼容性
+- 优化代码,逐步实现模块化
+
 ## version 1.2.1
 
 ### bug修复
