@@ -3,6 +3,12 @@
  */
 export const doc = document;
 export const db = new PouchDB('todos');
+/**
+ * @class TodoEvent
+ *
+ * @constructor handlers,rows
+ *
+ */
 function TodoEvent() {
   this.handlers = {};
   this.rows = [];
