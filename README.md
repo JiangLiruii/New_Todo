@@ -4,6 +4,12 @@
 
 ## Todo Function
 
+## version 1.3.0
+
+### 优化设计
+
+- 将自定义事件模块化
+
 ## version 1.2.1
 
 ### bug修复
