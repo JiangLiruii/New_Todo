@@ -2,6 +2,11 @@
 
 ## Restart Todo Project
 
+## 运行截图:
+![](http://p799phkik.bkt.clouddn.com/%E4%B8%BB%E7%95%8C%E9%9D%A2.png)
+
+## 请查看[DEMO](http://p799phkik.bkt.clouddn.com/INtwYXt018.gif)演示
+
 ## Todo Function
 
 ## version 1.3.0
