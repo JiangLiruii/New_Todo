@@ -1,11 +1,8 @@
 /**
  * 用于根据获取到的数据呈现视图和用户交互
  */
-import todoEvent from './todoEvents';
+import { doc, todoEvent } from './todoEvents';
 
-const {
-  itemUpdate, itemAdd, itemDelete, onSyncRecieve, itemChange, doc,
-} = todoEvent;
 const syncDom = doc.getElementById('syncDom');
 const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');
@@ -15,8 +12,9 @@ const footer = doc.getElementsByTagName('footer')[0];
 let time;
 // 用于升降序
 let descending = false;
-doc.addEventListener('startSync', onStartSync);
-doc.addEventListener('itemUpdate', onitemUpdate);
+
+todoEvent.subscribe('startSync', onStartSync);
+todoEvent.subscribe('itemUpdate', onitemUpdate);
 doc.getElementById('title').addEventListener('click', onTitleClick);
 doc.getElementById('addButton').addEventListener('click', onAdd);
 doc.getElementById('pages').addEventListener('click', onPageClick);
@@ -35,7 +33,7 @@ function onClickFunc(e) {
 }
 
 function onFilterChange(e) {
-  const data = onSyncRecieve.detail.data;
+  const data = {};
   if (e.target.id === 'filterAdd') {
     data.addDate = e.target.value;
   } else if (e.target.id === 'filterComplete') {
@@ -44,11 +42,11 @@ function onFilterChange(e) {
     data.complete = e.target.value;
   }
   syncDom.innerText = 'SYNCING';
-  doc.dispatchEvent(onSyncRecieve);
+  todoEvent.publish('onSyncRecieve', data);
 }
 
-function onPageClick(element) {
-  let nextPage = +element.getAttribute('page');
+function onPageClick(e) {
+  let nextPage = +e.target.getAttribute('page');
   switch (nextPage) {
     case 0:
       nextPage = 1;
@@ -59,8 +57,7 @@ function onPageClick(element) {
     default:
       break;
   }
-  itemUpdate.detail.currentPage = nextPage;
-  onitemUpdate();
+  onitemUpdate(nextPage);
 }
 /**
  *
@@ -71,7 +68,7 @@ function onTitleClick(e) {
   let className = `${e.target.className.replace('item', '')}`;
   className = className[0].toLowerCase() + className.substr(1);
 
-  const sortedContent = itemUpdate.detail.rows;
+  const sortedContent = todoEvent.getTodoRows();
   if (!descending) {
     sortedContent.sort((itemA, itemB) => {
       console.log(itemA[className], itemB[className], itemA[className] > itemB[className]);
@@ -85,8 +82,8 @@ function onTitleClick(e) {
     });
     descending = false;
   }
-  itemUpdate.detail.rows = sortedContent;
-  doc.dispatchEvent(itemUpdate);
+  todoEvent.setTodoRows(sortedContent);
+  todoEvent.publish('itemUpdate');
 }
 
 function onAdd() {
@@ -98,7 +95,7 @@ function onAdd() {
   if (todoInput.value.trim() === '') {
     onEmpty();
   } else {
-    itemAdd.detail.data = {
+    const data = {
       _id: date.getTime().toString(),
       _rev: null,
       title: todoInput.value.trim(),
@@ -106,34 +103,34 @@ function onAdd() {
       finishDate: finishDate || newDate,
       complete: false,
     };
-    doc.dispatchEvent(itemAdd);
+    todoEvent.publish('itemAdd', data);
   }
 }
 
 function onDelete(ele) {
   // item 确认弹窗
   const item = ele.parentNode.parentNode;
-  itemDelete.detail.data = {
+  const data = {
     id: item.getAttribute('_id'),
     rev: item.getAttribute('_rev'),
   };
-  doc.dispatchEvent(itemDelete);
+  todoEvent.publish('itemDelete', data);
 }
 /**
  * @param {event} e change事件
  * 当有代办项改变时触发
  */
-function onItemChange(e) {
+function onItemChange(e, data = {}) {
   const item = e.target.parentNode;
   let complete = '';
   // 单击完成触发事件
   if (e.target.className === 'itemComplete') {
     complete = !item.children[0].hasAttribute('checked');
-    item.setAttribute('_complete', itemChange.detail.complete);
+    item.setAttribute('_complete', data.complete);
   } else {
     complete = item.children[0].hasAttribute('checked');
   }
-  itemChange.detail.data = {
+  data = {
     complete,
     _rev: item.getAttribute('_rev'),
     _id: item.getAttribute('_id'),
@@ -141,7 +138,7 @@ function onItemChange(e) {
     date: item.children[2].value,
     finishDate: item.children[3].value,
   };
-  doc.dispatchEvent(itemChange);
+  todoEvent.publish('itemChange', data);
 }
 
 function onEmpty() {
@@ -158,12 +155,12 @@ function onEmpty() {
 
 
 function onStartSync() {
-  const data = onSyncRecieve.detail.data;
+  const data = {};
   syncDom.innerText = 'SYNCING';
   data.complete = 'all';
   data.addDate = '';
   data.finishDate = '';
-  doc.dispatchEvent(onSyncRecieve);
+  todoEvent.publish('onSyncRecieve', data);
 }
 /**
  * 最重要的更新函数,在以下情况调用
@@ -175,10 +172,9 @@ function onStartSync() {
  * 6 筛选条件改变时
  * 7 页面跳转时
  */
-function onitemUpdate() {
-  const pages = Math.ceil(itemUpdate.detail.rows.length / 10);
-  const currentPage = itemUpdate.detail.currentPage || 1;
-  const rows = itemUpdate.detail.rows.slice((currentPage - 1) * 10, currentPage * 10);
+function onitemUpdate(currentPage = 1) {
+  const pages = Math.ceil(todoEvent.getTodoRows().length / 10);
+  const rows = todoEvent.getTodoRows().slice((currentPage - 1) * 10, currentPage * 10);
   todoInput.value = '';
   let todoLists = '';
   content.innerHTML = '';
