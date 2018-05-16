@@ -3,7 +3,10 @@
  * 1 与数据库的同步
  * 2 数据项的增加,删除和修改
  */
-import { doc, db, todoEvent } from './todoEvents';
+import todoEvent from './todoEvents';
+
+const db = new PouchDB('todos');
+const doc = document;
 
 todoEvent.subscribe('onSyncRecieve', sync);
 todoEvent.subscribe('itemDelete', onItemDelete);

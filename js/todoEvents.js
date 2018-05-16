@@ -1,9 +1,7 @@
+
 /**
- * 创建公共变量,包括自定义事件,document对象和db对象
- */
-export const doc = document;
-export const db = new PouchDB('todos');
-/**
+ * 创建自定义事件模块
+ *
  * @class TodoEvent
  *
  * @constructor handlers,rows
@@ -40,7 +38,6 @@ TodoEvent.prototype.off = function (type, listener) {
   }
 };
 TodoEvent.prototype.publish = function (type, ...thisArgs) {
-  console.log(thisArgs);
   const list = this.handlers[type],
     length = this.handlers[type].length;
   let i;
@@ -54,4 +51,4 @@ TodoEvent.prototype.getTodoRows = function () {
 TodoEvent.prototype.setTodoRows = function (rows) {
   this.rows = rows;
 };
-export const todoEvent = new TodoEvent();
+export default new TodoEvent();

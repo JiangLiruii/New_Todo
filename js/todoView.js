@@ -1,8 +1,9 @@
 /**
  * 用于根据获取到的数据呈现视图和用户交互
  */
-import { doc, todoEvent } from './todoEvents';
+import todoEvent from './todoEvents';
 
+const doc = document;
 const syncDom = doc.getElementById('syncDom');
 const prompt = doc.getElementById('prompt');
 const todoInput = doc.getElementById('todoInput');
@@ -61,7 +62,7 @@ function onPageClick(e) {
 }
 /**
  *
- * @param {event} e 触发事件
+ * @param {Event} e 触发事件
  * 当点击title时进行排序函数
  */
 function onTitleClick(e) {
@@ -70,16 +71,10 @@ function onTitleClick(e) {
 
   const sortedContent = todoEvent.getTodoRows();
   if (!descending) {
-    sortedContent.sort((itemA, itemB) => {
-      console.log(itemA[className], itemB[className], itemA[className] > itemB[className]);
-      return itemA[className] < itemB[className];
-    });
+    sortedContent.sort((itemA, itemB) => itemA[className] < itemB[className]);
     descending = true;
   } else {
-    sortedContent.sort((itemA, itemB) => {
-      console.log(itemA[className], itemB[className], itemA[className] < itemB[className]);
-      return itemA[className] > itemB[className];
-    });
+    sortedContent.sort((itemA, itemB) => itemA[className] > itemB[className]);
     descending = false;
   }
   todoEvent.setTodoRows(sortedContent);
@@ -152,7 +147,6 @@ function onEmpty() {
     prompt.innerText = '';
   }, 2000);
 }
-
 
 function onStartSync() {
   const data = {};
