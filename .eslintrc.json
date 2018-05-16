@@ -10,6 +10,7 @@
         "no-debugger": "off",
         "no-param-reassign": "off",
         "func-names": "off",
-        "one-var": "off"
+        "one-var": "off",
+        "class-methods-use-this": "off"
     }
 }
