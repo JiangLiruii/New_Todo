@@ -7,22 +7,21 @@
  * @constructor
  *
  */
+const handlers = {};
+let rows = [];
+
 class TodoEvent {
-  constructor() {
-    this.handlers = {};
-    this.rows = [];
-  }
   subscribe(type, listener) {
-    if (!(type in this.handlers)) {
-      this.handlers[type] = [];
+    if (!(type in handlers)) {
+      handlers[type] = [];
     }
-    this.handlers[type].push(listener);
+    handlers[type].push(listener);
   }
   off(type, listener) {
     let i,
       position = -1;
-    const list = this.handlers[type],
-      length = this.handlers[type].length;
+    const list = handlers[type],
+      length = handlers[type].length;
     for (i = length - 1; i >= 0; i -= 1) {
       if (list[i] === listener) {
         position = i;
@@ -33,24 +32,24 @@ class TodoEvent {
       return;
     }
     if (length === 1) {
-      delete this.handlers[type];
+      delete handlers[type];
     } else {
-      this.handlers[type].splice(position, 1);
+      handlers[type].splice(position, 1);
     }
   }
   publish(type, ...thisArgs) {
-    const list = this.handlers[type],
-      length = this.handlers[type].length;
+    const list = handlers[type],
+      length = handlers[type].length;
     let i;
     for (i = length - 1; i >= 0; i -= 1) {
       list[i].apply(this, thisArgs);
     }
   }
   getTodoRows() {
-    return this.rows;
+    return rows;
   }
-  setTodoRows(rows) {
-    this.rows = rows;
+  setTodoRows(newRows) {
+    rows = newRows;
   }
 }
 export default new TodoEvent();
