@@ -3,7 +3,12 @@
 ## Restart Todo Project
 
 ## 运行截图:
-![](http://p799phkik.bkt.clouddn.com/%E4%B8%BB%E7%95%8C%E9%9D%A2.png)
+
+### 初始化:
+![](http://p799phkik.bkt.clouddn.com/%E6%97%A0%E6%95%B0%E6%8D%AE.png)
+
+### 填充数据:
+![](http://p799phkik.bkt.clouddn.com/%E5%AE%8C%E5%85%A8%E6%95%B0%E6%8D%AE.png)
 
 ## 请查看[DEMO](http://p799phkik.bkt.clouddn.com/INtwYXt018.gif)演示
 
