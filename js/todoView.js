@@ -34,7 +34,11 @@ function onClickFunc(e) {
 }
 
 function onFilterChange(e) {
-  const data = {};
+  const data = {
+    addDate: doc.getElementById('filterAdd').value,
+    finishDate: doc.getElementById('filterComplete').value,
+    complete: doc.getElementById('completeSelect').value,
+  };
   if (e.target.id === 'filterAdd') {
     data.addDate = e.target.value;
   } else if (e.target.id === 'filterComplete') {
