@@ -48,22 +48,7 @@ function onitemAdd(data) {
   db.put(data, (err, res) => {
     if (!err) {
       data._rev = res.rev;
-      const {
-        complete,
-        title,
-        date,
-        finishDate,
-        _rev,
-        _id,
-      } = data;
-      todoEvent.getTodoRows().unshift({
-        complete,
-        title,
-        date,
-        finishDate,
-        _rev,
-        _id,
-      });
+      todoEvent.getTodoRows().unshift(data);
       todoEvent.publish('itemUpdate');
     } else {
       console.error('something error', err);
