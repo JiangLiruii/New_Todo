@@ -12,7 +12,10 @@
 
 ## 请查看[DEMO](http://p799phkik.bkt.clouddn.com/INtwYXt018.gif)演示
 
-## Todo Function
+## 功能介绍
+
+### 1 待办项的增删改查
+### 2 待办项按日期,按完成情况进行筛选
 
 ## version 1.3.0
 
