@@ -2,7 +2,32 @@
 
 ## Restart Todo Project
 
-## Todo Function
+## 运行截图:
+
+### 初始化:
+![](http://p799phkik.bkt.clouddn.com/%E6%97%A0%E6%95%B0%E6%8D%AE.png)
+
+### 填充数据:
+![](http://p799phkik.bkt.clouddn.com/%E5%AE%8C%E5%85%A8%E6%95%B0%E6%8D%AE.png)
+
+## 请查看[DEMO](http://p799phkik.bkt.clouddn.com/INtwYXt018.gif)演示
+
+## 功能介绍
+
+### 1 待办项的增删改查
+### 2 待办项按日期,按完成情况进行筛选
+
+## version 1.3.1
+
+### bug修复
+
+- 修复筛选bug,完善合并条件筛选
+
+## version 1.3.0
+
+### 优化设计
+
+- 将自定义事件模块化
 
 ## version 1.2.2
 

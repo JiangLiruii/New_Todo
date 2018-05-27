@@ -79,10 +79,14 @@ main {
 }
 
 .itemComplete,
-.itemDate,
-.itemDelete,
-.itemFinishDate {
+.itemDelete {
     flex: 1 1 0;
+    align-self: center;
+}
+
+.itemDate,
+.itemFinishDate {
+    flex:1.6 1 0;
     align-self: center;
 }
 

@@ -8,6 +8,9 @@
         "no-shadow": "off",
         "array-callback-return": "off",
         "no-debugger": "off",
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "func-names": "off",
+        "one-var": "off",
+        "class-methods-use-this": "off"
     }
 }

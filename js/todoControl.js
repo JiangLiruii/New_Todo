@@ -5,28 +5,28 @@
  */
 import todoEvent from './todoEvents';
 
-const {
-  doc, startSync, itemUpdate, db, itemAdd, itemDelete, onSyncRecieve, itemChange,
-} = todoEvent;
-doc.addEventListener('onSyncRecieve', sync);
-doc.addEventListener('itemDelete', onItemDelete);
-doc.addEventListener('itemChange', onItemDataChange);
-doc.addEventListener('itemAdd', onitemAdd);
+const db = new PouchDB('todos');
+const doc = document;
+
+todoEvent.subscribe('onSyncRecieve', sync);
+todoEvent.subscribe('itemDelete', onItemDelete);
+todoEvent.subscribe('itemChange', onItemDataChange);
+todoEvent.subscribe('itemAdd', onitemAdd);
 /**
  * 与数据库同步,获取初始数据保存到缓存中
  */
-function sync() {
+function sync(data = {}) {
   db.allDocs({
     include_docs: true,
     descending: true,
   }, (err, docs) => {
-    const {
-      complete,
-      addDate,
-      finishDate,
-    } = onSyncRecieve.detail.data;
     const rowsSend = [];
     docs.rows.forEach((row) => {
+      const {
+        complete,
+        addDate,
+        finishDate,
+      } = data;
       const dateBoolean = (!addDate || row.doc.date === addDate) &&
         (!finishDate || row.doc.finishDate === finishDate);
       if (complete === 'all' && !addDate && !finishDate) {
@@ -37,35 +37,19 @@ function sync() {
         rowsSend.push(row.doc);
       }
     });
-    itemUpdate.detail.rows = rowsSend;
-    doc.dispatchEvent(itemUpdate);
+    todoEvent.setTodoRows(rowsSend);
+    todoEvent.publish('itemUpdate');
   });
 }
 /**
  * 当数据项增加时调用
  */
-function onitemAdd() {
-  const data = itemAdd.detail.data;
+function onitemAdd(data) {
   db.put(data, (err, res) => {
     if (!err) {
       data._rev = res.rev;
-      const {
-        complete,
-        title,
-        date,
-        finishDate,
-        _rev,
-        _id,
-      } = data;
-      itemUpdate.detail.rows.unshift({
-        complete,
-        title,
-        date,
-        finishDate,
-        _rev,
-        _id,
-      });
-      doc.dispatchEvent(itemUpdate);
+      todoEvent.getTodoRows().unshift(data);
+      todoEvent.publish('itemUpdate');
     } else {
       console.error('something error', err);
     }
@@ -74,9 +58,8 @@ function onitemAdd() {
 /**
  * 当数据项删除时调用
  */
-function onItemDelete() {
-  const data = itemDelete.detail.data;
-  const rows = itemUpdate.detail.rows;
+function onItemDelete(data) {
+  const rows = todoEvent.getTodoRows();
   db.remove(data.id, data.rev)
     .then(() => {
       rows.forEach((row) => {
@@ -84,41 +67,26 @@ function onItemDelete() {
           rows.splice(rows.indexOf(row), 1);
         }
       });
-      doc.dispatchEvent(itemUpdate);
+      todoEvent.publish('itemUpdate');
     });
 }
 /**
  * 当数据项改变时调用
  */
-function onItemDataChange() {
-  const {
-    _id,
-    _rev,
-    date,
-    title,
-    complete,
-    finishDate,
-  } = itemChange.detail.data;
-  db.put({
-    _id,
-    _rev,
-    date,
-    title,
-    complete,
-    finishDate,
-  }).then((docs) => {
-    itemUpdate.detail.rows.forEach((row) => {
-      if (row._id === _id) {
-        row.date = date;
-        row.title = title;
-        row.finishDate = finishDate;
+function onItemDataChange(data) {
+  db.put(data).then((docs) => {
+    todoEvent.getTodoRows().forEach((row) => {
+      if (row._id === data._id) {
+        row.date = data.date;
+        row.title = data.title;
+        row.finishDate = data.finishDate;
         row._rev = docs.rev;
-        row.complete = complete;
+        row.complete = data.complete;
       }
     });
-    doc.dispatchEvent(itemUpdate);
+    todoEvent.publish('itemUpdate');
   });
 }
 doc.onload = (() => {
-  doc.dispatchEvent(startSync);
+  todoEvent.publish('startSync');
 })();
