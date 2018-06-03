@@ -4,11 +4,11 @@ interface ItemListProps {
   list: Array<ItemDetail>,
 }
 
-interface ItemDetail {
+export interface ItemDetail {
   complete: boolean,
   detail: string,
-  addDate: Date,
-  finishDate: Date,
+  addDate: string,
+  finishDate: string,
   _id: string,
   _rev: string
 }
@@ -19,9 +19,9 @@ interface ItemListState {
 export default class ItemList extends React.Component<ItemListProps, ItemListState> {
   constructor(props: ItemListProps) {
     super(props);
-    this.setState({
+    // this.setState({
 
-    })
+    // })
   }
   render() {
     const items = this.props.list;
@@ -30,6 +30,6 @@ export default class ItemList extends React.Component<ItemListProps, ItemListSta
       <span className="itemDate">添加时间</span>
       <span className="itemFinishDate">完成时间</span>
       <span className="itemDelete">删除待办</span>
-      {items.map(item => <Item item={item} />)}</div>);
+      {items.map((item,index) => <Item item={item} key={index}/>)}</div>);
   }
 }

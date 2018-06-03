@@ -3,6 +3,7 @@ export interface AddItemStates {
     _id: string;
     detail: string;
     addDate: string;
+    finishDate: string;
     complete: boolean;
 }
 interface AddItemProps {
@@ -14,6 +15,7 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
         this.state = {
             _id: '',
             addDate: '',
+            finishDate:'',
             detail: '',
             complete: false,
         }
@@ -32,7 +34,6 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
         return e.target.type === "date" ? this.setState({ addDate: value }) : this.setState({ detail: value });
     }
     private onButtonClick() {
-        console.log(1);
         const timeStamp = (new Date).getTime();
         this.props.itemAdd({
             detail: this.state.detail,
