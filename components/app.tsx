@@ -15,8 +15,8 @@ export interface AppContext {
     itemDelete:Function,
 }
 
-const db = PouchDB('todos') || new PouchDB('todos');
 export class App extends React.Component<{}, AppState> {
+    private db;
     constructor(props: AppState) {
         super(props);
         this.state = {
@@ -35,7 +35,10 @@ export class App extends React.Component<{}, AppState> {
         }
     }
     componentWillMount(): void {
-
+        this.db = PouchDB('todos') || new PouchDB('todos');
+    }
+    componentDidMount() {
+        this.itemSync();
     }
     render() {
         return (<div>
@@ -45,29 +48,28 @@ export class App extends React.Component<{}, AppState> {
         </div>)
     }
     private itemAdd(item: AddItemStates) {
-        db.put(item).then((res) => {
+        this.db.put(item).then((res) => {
             this.setState({
                 todoItems: this.state.todoItems.concat({...item,_rev:res.rev}),
             });
         }).catch((err) => { console.log(err) })
     }
     private itemSync() {
-        db.allDocs({ include_docs: true }).then((res) => {
+        this.db.allDocs({ include_docs: true,descending: true,}).then((res) => {
             console.log(res.rows);
             this.setState({
-                todoItems:res.rows,
+                todoItems:res.rows.map((row)=>row.doc),
             })
         })
     }
     private itemChange(data:any) {
-        db.put(data).then((docs) => {
-            console.log(docs)
-            // this.itemSync();
+        this.db.put(data).then((docs) => {
+            this.itemSync();
         });
         console.log(data);
     }
-    private itemDelete(item:ItemDetail){
-
+    private itemDelete(itemId,itemRev) {
+        this.db.remove(itemId,itemRev).then((docs)=>this.itemSync())
     }
 }
 ReactDOM.render(
