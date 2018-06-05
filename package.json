@@ -5,7 +5,9 @@
   "main": "",
   "scripts": {
     "test": "python3 -m http.server 8080",
-    "build": "babel components --watch -d lib"
+    "build": "babel components --watch -d lib && webpack",
+    "watch": "webpack --progress --watch",
+    "dev": "webpack-dev-server --open"
   },
   "repository": {
     "type": "git",
@@ -45,6 +47,7 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "ts-loader": "^4.3.0",
-    "webpack": "^4.9.1"
+    "webpack": "^4.9.1",
+    "webpack-dev-server": "^3.1.4"
   }
 }
