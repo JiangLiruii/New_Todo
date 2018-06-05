@@ -1,8 +1,8 @@
 import * as React from 'react';
 export interface AddItemStates {
     _id: string;
+    addDate:string;
     detail: string;
-    addDate: string;
     finishDate: string;
     complete: boolean;
 }
@@ -14,7 +14,7 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
         super(props);
         this.state = {
             _id: '',
-            addDate: '',
+            addDate:'',
             finishDate:'',
             detail: '',
             complete: false,
@@ -23,7 +23,7 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
     public render() {
         return (
             <div id="first">
-                <input type="text" onChange={(e) => { this.setState({ detail: e.target.value }) }} placeholder="请输入你接下来要做的事情" />
+                <input type="text" onChange={this.onDataChange.bind(this)} placeholder="请输入你接下来要做的事情" />
                 <input type="date" onChange={this.onDataChange.bind(this)} />
                 <input type="button" id="addButton" onClick={this.onButtonClick.bind(this)} />
                 <span id="prompt"></span></div>
@@ -31,14 +31,20 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
     }
     private onDataChange(e) {
         const value = e.target.value;
-        return e.target.type === "date" ? this.setState({ addDate: value }) : this.setState({ detail: value });
+        return e.target.type === "date" ? this.setState({ finishDate: value }) : this.setState({ detail: value });
+    }
+
+    private getDate() {
+        const date = new Date;
+        return `${date.getFullYear()}-${date.getMonth() + 1 > 10 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`}-${date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`}`;
     }
     private onButtonClick() {
         const timeStamp = (new Date).getTime();
         this.props.itemAdd({
             detail: this.state.detail,
             _id: timeStamp.toString(),
-            addDate: this.state.addDate,
+            addDate: this.getDate(),
+            finishDate: this.state.finishDate,
             complete: false,
         })
     }
