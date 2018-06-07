@@ -25,8 +25,9 @@ export default class Item extends React.Component<ItemProp, ItemState> {
 
   render() {
     const item = this.props.item;
+    
     return (<div className="contentWrap">
-      <span className="itemComplete"><input type='checkbox' defaultChecked={ item.complete } onClick={()=>this.context.itemChange(Object.assign({},item,{'complete':!item.complete}))} /></span>
+      <span className="itemComplete"><input type='checkbox' checked={item.complete} onChange={()=>this.context.itemChange(Object.assign({},item,{'complete':!item.complete}))} /></span>
       <span className="itemTitle"><input value={item.detail} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'detail':e.target.value}))}  /></span>
       <span className="itemDate"><input type="date" value={item.addDate} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'addDate':e.target.value}))} /></span>
       <span className="itemFinishDate"><input type="date" value={item.finishDate} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'finishDate':e.target.value}))} /></span>

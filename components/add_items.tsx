@@ -23,8 +23,8 @@ export default class AddItem extends React.Component<AddItemProps, AddItemStates
     public render() {
         return (
             <div id="first">
-                <input type="text" onChange={this.onDataChange.bind(this)} placeholder="请输入你接下来要做的事情" />
-                <input type="date" onChange={this.onDataChange.bind(this)} />
+                <input type="text" id="todoInput" onChange={this.onDataChange.bind(this)} placeholder="请输入你接下来要做的事情" />
+                <input type="date" id="finishDate" onChange={this.onDataChange.bind(this)} />
                 <input type="button" id="addButton" onClick={this.onButtonClick.bind(this)} />
                 <span id="prompt"></span></div>
         );
