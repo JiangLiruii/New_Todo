@@ -4,17 +4,16 @@ body {
     justify-content: center;
 }
 
-#all {
+#root {
     flex: 0 0 100%;
     background-image: url('./res/img/todoImg.jpeg');
     background-size: cover;
     border: 1px solid #cccccc;
     text-align: center;
 }
-
-main {
-    position: relative;
-}
+/* #root {
+    margin: 0 auto;
+} */
 
 #first {
     display: flex;
@@ -22,6 +21,7 @@ main {
     align-items: center;
     width: 100%;
     margin: 0 auto;
+    
     justify-content: space-around;
 }
 
