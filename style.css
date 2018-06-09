@@ -79,18 +79,18 @@ body {
     background-color: rgba(207, 206, 206, 0.9);
 }
 
-.itemComplete,
+.complete,
 .itemDelete {
     flex: 1 1 15%;
     align-self: center;
 }
 
-.itemDate,
-.itemFinishDate {
+.addDate,
+.finishDate {
     flex:3 1 25%;
     align-self: center;
 }
-.itemTitle {
+.detail {
     flex: 2 1 20%;
     align-self: center;
 }
@@ -156,4 +156,8 @@ input[type='checkbox'],
 
 #filter {
     margin-top: 1rem;
+}
+
+.hide {
+    display: none;
 }

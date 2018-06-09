@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {AppContext} from './app'
+import { AppContext, filterData } from './app'
 import Item from './item';
 import PropTypes from '../node_modules/prop-types/index';
 
@@ -29,11 +29,19 @@ export default class ItemList extends React.Component<ItemListProps, ItemListSta
   }
   render() {
     const items = this.props.list;
-    return (<div onClick={(e)=>this.context.titleClick(e)}><div id="title"><span className="itemComplete">确认完成</span>
-      <span className="itemDetail">待办描述</span>
-      <span className="itemAddDate">添加时间</span>
-      <span className="itemFinishDate">完成时间</span>
-      <span className="itemDelete">删除待办</span></div>
-      <div>{items.map((item,index) => <Item item={item} key={index}/>)}</div></div>);
+    console.log('itemList',items);
+    
+    return (
+      <div>
+        <div id="title"  onClick={(e)=>this.context.titleClick(e)}>
+        <span className="complete">确认完成</span>
+        <span className="detail">待办描述</span>
+        <span className="addDate">添加时间</span>
+        <span className="finishDate">完成时间</span>
+        <span className="itemDelete">删除待办</span></div>
+        <div>{items.map((item,index) =><Item item={item} key={index} />)}
+        </div>
+      </div>
+    );
   }
 }

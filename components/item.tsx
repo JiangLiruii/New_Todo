@@ -8,7 +8,6 @@ interface ItemProp {
 }
 
 interface ItemState {
-
 }
 
 export default class Item extends React.Component<ItemProp, ItemState> {
@@ -25,16 +24,33 @@ export default class Item extends React.Component<ItemProp, ItemState> {
 
   render() {
     const item = this.props.item;
-    
-    return (<div className="contentWrap">
-      <span className="itemComplete"><input type='checkbox' checked={item.complete} onChange={()=>this.context.itemChange(Object.assign({},item,{'complete':!item.complete}))} /></span>
-      <span className="itemTitle"><input value={item.detail} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'detail':e.target.value}))}  /></span>
-      <span className="itemDate"><input type="date" value={item.addDate} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'addDate':e.target.value}))} /></span>
-      <span className="itemFinishDate"><input type="date" value={item.finishDate} onChange={(e)=>this.context.itemChange(Object.assign({},this.props.item,{'finishDate':e.target.value}))} /></span>
-      <span className='itemDelete'> <button onClick={()=>this.context.itemDelete(item._id,item._rev)}>x</button></span>
+    return (<div className="contentWrap" >
+      <span className="complete"><input type='checkbox' checked={item.complete} onChange={this.onDataChange.bind(this)} /></span>
+      <span className="detail"><input value={item.detail} onChange={this.onDataChange.bind(this)} /></span>
+      <span className="date"><div>{item.addDate}</div></span>
+      <span className="finishDate"><input type="date" value={item.finishDate} onChange={this.onDataChange.bind(this)} /></span>
+      <span className='itemDelete'><button onClick={()=>this.context.itemDelete(item._id,item._rev)}>x</button></span>
     </div>)
   }
-  private complete() {
 
+  private onDataChange (e) {
+    const key = e.target.parentNode.className;
+    const item = this.state.item;
+    let value = e.target.value; 
+    if (key === 'complete') {
+      value = !item.complete
+    }
+    console.log(key,value);
+    this.state.item[key] = value;
+    console.log(this.state);
+    
+    this.context.itemChange(this.state.item,this.updateRef.bind(this))
+  }
+  private updateRef(rev) {
+    console.log(rev);
+    
+    this.setState({
+      item: Object.assign({},this.state.item,{_rev:rev})
+    })
   }
 }
