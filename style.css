@@ -1,32 +1,34 @@
-body {
+#react_root {
     display: flex;
     min-width: 800px;
     justify-content: center;
-}
-
-#root {
-    flex: 0 0 100%;
+    align-items: center;
     background-image: url('./res/img/todoImg.jpeg');
     background-size: cover;
     border: 1px solid #cccccc;
-    text-align: center;
+    flex-flow: row wrap;
+    align-content: center;
+    height: 500px;
 }
-/* #root {
-    margin: 0 auto;
-} */
 
 #first {
     display: flex;
+    flex: 0 0 100%;
     flex-direction: row;
     align-items: center;
-    width: 100%;
-    margin: 0 auto;
-    
-    justify-content: space-around;
+    justify-content: center;
+    flex-flow: row wrap;
+}
+
+#first #editor {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0
 }
 
 #todoInput {
-    flex: 0 0 60%;
+    flex: 0 0 40%;
     font-size: 1rem;
     height: 2rem;
     border-radius: 0.5rem;
@@ -42,7 +44,7 @@ body {
 }
 
 #finishDate {
-    flex: 1 0 0;
+    flex: 0 0 20%;
     border-radius: 0.5rem;
 }
 
@@ -56,43 +58,62 @@ body {
     border-radius: 2rem;
 }
 
-#prompt {
-    position: absolute;
-    top: -1.5em;
-}
-
 #completeSelect {
     margin: 1em 0;
 }
 
-#title,
-.contentWrap {
-    width: 100%;
+#filter * {
     border-radius: 0.5rem;
-    margin: 0 auto;
+    height: 1.5rem;
+    margin: 0.5rem;
+}
+
+#filter {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    justify-items: center;
+}
+
+#itemList {
+    margin-top: 1rem;
+    flex: 0 0 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+#title,
+#itemDesc {
+    flex: 0 0 80%;
+    border-radius: 0.5rem;
     display: flex;
     justify-content: center;
     background-color: rgba(207, 206, 206, 0.6);
+    flex-flow: row wrap;
+    align-self: center;
 }
-
 #title {
+    text-align: center;
     background-color: rgba(207, 206, 206, 0.9);
 }
-
+#itemDesc .contentWrap {
+    flex: 0 0 100%;
+    display: flex;
+    margin-top: 0.5rem;
+}
 .complete,
 .itemDelete {
-    flex: 1 1 15%;
-    align-self: center;
+    flex: 1.5 0 0;
 }
 
-.addDate,
+.detail,
 .finishDate {
-    flex:3 1 25%;
-    align-self: center;
+    flex:3 0 0;
 }
-.detail {
-    flex: 2 1 20%;
-    align-self: center;
+.addDate {
+    flex: 2 0 0;
 }
 
 #title span {
@@ -112,31 +133,21 @@ body {
     font-weight: normal;
 }
 
-.contentWrap>input {
-    background-color: rgba(207, 206, 206, 0.9);
-    height: 1rem;
-    text-align: center;
+.contentWrap input {
+    width: 100%;
+    height: 1.1rem;
+    background: transparent;
+    text-align: left;
     font-size: 1.1rem;
+    border: 1px dotted blueviolet;
 }
-
-
-
-input[type='checkbox'],
-.itemDelete button {
-    height: 1.5rem;
+.contentWrap span {
+    text-align: center;
+    align-self: center;
 }
-
-#syncDom {
-    width: 70%;
-    margin: 1rem auto;
-    border-radius: 0.5rem;
-    background-color: rgba(207, 206, 206, 0.82);
-}
-
 .pages {
     padding: 0 0.5rem;
     text-decoration-line: underline;
-    background-color: rgba(207, 206, 206, 0.82);
     border-radius: 0.5rem;
 }
 
@@ -146,16 +157,6 @@ input[type='checkbox'],
 
 .pages:hover {
     cursor: pointer;
-}
-
-#filter * {
-    background-color: rgba(207, 206, 206, 0.82);
-    border-radius: 0.5rem;
-    margin: 0.5rem;
-}
-
-#filter {
-    margin-top: 1rem;
 }
 
 .hide {
