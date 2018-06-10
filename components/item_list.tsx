@@ -29,17 +29,17 @@ export default class ItemList extends React.Component<ItemListProps, ItemListSta
   }
   render() {
     const items = this.props.list;
-    console.log('itemList',items);
     
     return (
-      <div>
-        <div id="title"  onClick={(e)=>this.context.titleClick(e)}>
-        <span className="complete">确认完成</span>
-        <span className="detail">待办描述</span>
-        <span className="addDate">添加时间</span>
-        <span className="finishDate">完成时间</span>
-        <span className="itemDelete">删除待办</span></div>
-        <div>{items.map((item,index) =><Item item={item} key={index} />)}
+      <div id="itemList">
+          <div id="title"  onClick={(e)=>this.context.titleClick(e)}>
+          <span className="complete">确认完成</span>
+          <span className="detail">待办描述</span>
+          <span className="addDate">添加时间</span>
+          <span className="finishDate">完成时间</span>
+          <span className="itemDelete">删除待办</span>
+          </div>
+        <div id="itemDesc">{items.map((item,index) => <Item item={item} key={item._id}/>)}
         </div>
       </div>
     );

@@ -15,15 +15,15 @@ export default class PaginationComponents extends React.Component<PaginationProp
     const getPage = (pages) =>{
       const res = [];
       for (let i = 1; i <= pages; i ++) {
-        res.push(<span className={this.props.current_page === i ? 'active' : ''} id={`${i}`} key={i}> {i} </span>)
+        res.push(<span className={'pages' + (this.props.current_page === i ? ' active' : '')} id={`${i}`} key={i}> {i} </span>)
       }
       return res;
     }
     return (
-      <div className={'pages'} onClick={(e)=>this.onPageClick(e)}>
-        <span id='1' key={0}>首页</span>
+      <div onClick={(e)=>this.onPageClick(e)}>
+        <span className={'pages'} id='1' key={0}>首页</span>
         {getPage(this.props.pages)}
-        <span id={`${this.props.pages}`} key={-1}>尾页</span>
+        <span className={'pages'} id={`${this.props.pages}`} key={-1}>尾页</span>
       </div>
     );
   }
