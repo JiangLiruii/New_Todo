@@ -17,7 +17,8 @@
 - 布局继续沿用了flex方式。
 
 ### 目录结构
-
+```
+.
 ├── bundle.js ---> 自动打包生成的js文件，可在webpack中进行配置
 ├── components ---> 包含所有组件
 │   ├── add_items.tsx --> 添加待办项
@@ -35,3 +36,4 @@
 ├── style.css --> 样式表
 ├── tsconfig.json
 └── webpack.config.js --> webpack配置表
+```
